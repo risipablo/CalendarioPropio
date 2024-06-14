@@ -1,0 +1,140 @@
+
+.nota {
+    padding: 20px 30px;
+    max-width: 900px;
+    margin: 4rem auto;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.nota h2 {
+    text-align: center;
+    color: #333;
+}
+
+.nota-input {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.nota-input input {
+    flex: 1;
+    padding: 12px;
+    font-size: 1rem;
+    margin-right: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.nota-input button {
+    padding: 12px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    background-color: #2380e3;
+    color: white;
+}
+
+.nota-input .agregar {
+    background-color: #0e41c1;
+}
+
+.agregar:hover{
+    background-color: #153ea7;
+}
+
+.notas {
+    overflow-x: auto;
+}
+
+.notas table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.notas th, .notas td {
+
+    padding: 15px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.notas th {
+    background-color: #0e41c1;
+    color: rgb(255, 255, 255);
+    text-align: center;
+}
+
+.notas td {
+    color: rgb(15, 15, 15);
+    text-align: center;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.notas-buttons button {
+    margin-right: 12px;
+    padding: 8px 12px;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+}
+
+.completar {
+    background-color: rgb(3, 143, 3);
+    color: rgb(255, 255, 255);
+}
+
+.desmarcar {
+    background-color: rgb(241, 6, 6);
+    color: rgb(255, 255, 255);
+}
+
+.eliminar {
+    background-color: rgb(78, 74, 74);
+    color: rgb(255, 255, 255);
+}
+
+.completed td {
+    text-decoration: line-through;
+    color: grey;
+}
+
+.calendario{
+    margin: 30px;
+    background-color: #080808;
+    color: #fff;
+    border-radius:20px ;
+    padding: 1rem;
+    text-decoration: none;
+}
+
+@media (max-width: 600px) {
+    .nota-input {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .nota-input input {
+        margin: 0 0 10px 0;
+    }
+
+    .nota-input button {
+        margin: 10px 0;
+    }
+
+    .notas th, .notas td {
+        padding: 8px;
+    }
+
+    .notas-buttons button {
+        margin: 12px 0;
+        padding: 5px;
+        font-size: .8rem;
+    }
+}
