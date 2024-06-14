@@ -3,20 +3,23 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const NoteModel = require('./Models/Note');
 const TareaModel = require('./Models/Tareas');
-require("dotenv").config();
+require('dotenv').config();
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-// Connect to MongoDB Atlas
+
 mongoose
   .connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Conexión exitosa con MongoDB'))
   .catch((err) => console.log('Conexión fallida: ' + err));
 
-// Get all notes
-app.get('/notes', async (req, res) => {
+
+const apiRouter = express.Router();
+
+
+apiRouter.get('/notes', async (req, res) => {
   try {
     const notes = await NoteModel.find();
     const notesMap = {};
@@ -30,8 +33,7 @@ app.get('/notes', async (req, res) => {
   }
 });
 
-// Add a note
-app.post('/add', async (req, res) => {
+apiRouter.post('/add', async (req, res) => {
   try {
     const { date, note } = req.body;
     if (!date || !note) {
@@ -52,8 +54,7 @@ app.post('/add', async (req, res) => {
   }
 });
 
-// Delete a note
-app.delete('/delete/:date', async (req, res) => {
+apiRouter.delete('/delete/:date', async (req, res) => {
   try {
     const date = req.params.date;
     await NoteModel.deleteOne({ date });
@@ -64,15 +65,14 @@ app.delete('/delete/:date', async (req, res) => {
   }
 });
 
-// Get all tasks
-app.get('/tasks', (req, res) => {
+
+apiRouter.get('/tasks', (req, res) => {
   TareaModel.find()
     .then(tasks => res.json(tasks))
     .catch(err => res.status(500).json({ error: err.message }));
 });
 
-// Add a task
-app.post('/add-task', (req, res) => {
+apiRouter.post('/add-task', (req, res) => {
   const { task, descripcion } = req.body;
   const newTask = new TareaModel({ task, descripcion });
   newTask.save()
@@ -80,8 +80,7 @@ app.post('/add-task', (req, res) => {
     .catch(err => res.status(500).json({ error: err.message }));
 });
 
-// Update a task
-app.patch('/update-task/:id', (req, res) => {
+apiRouter.patch('/update-task/:id', (req, res) => {
   const { id } = req.params;
   const { completed } = req.body;
   TareaModel.findByIdAndUpdate(id, { completed }, { new: true })
@@ -89,15 +88,17 @@ app.patch('/update-task/:id', (req, res) => {
     .catch(err => res.status(500).json({ error: err.message }));
 });
 
-// Delete a task
-app.delete('/delete-task/:id', (req, res) => {
+apiRouter.delete('/delete-task/:id', (req, res) => {
   const { id } = req.params;
   TareaModel.findByIdAndDelete(id)
     .then(result => res.json(result))
     .catch(err => res.status(500).json({ error: err.message }));
 });
 
-// Start the server
+
+app.use('/api', apiRouter);
+
+
 app.listen(3001, () => {
   console.log('Servidor funcionando en el puerto 3001');
 });

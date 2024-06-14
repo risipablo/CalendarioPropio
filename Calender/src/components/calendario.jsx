@@ -5,8 +5,7 @@ import 'react-calendar/dist/Calendar.css';
 import './calendario.css';
 import { NavLink } from 'react-router-dom';
 
-const serverFront = process.env.REACT_APP
-
+const serverFront = process.env.REACT_APP;
 
 function Calendario() {
   const [date, setDate] = useState(new Date());
@@ -14,10 +13,10 @@ function Calendario() {
   const [currentNote, setCurrentNote] = useState('');
 
   useEffect(() => {
-    axios.get(`${serverFront}/notes`)
+    axios.get(`${serverFront}/api/notes`)
       .then(response => setNotes(response.data))
       .catch(err => console.error(err));
-  }, []);
+  }, [serverFront]);
 
   const onChange = (newDate) => {
     setDate(newDate);
@@ -34,13 +33,13 @@ function Calendario() {
     setNotes(updatedNotes);
     setCurrentNote('');
 
-    axios.post(`${serverFront}/add`, { date: dateString, note: currentNote })
+    axios.post(`${serverFront}/api/add`, { date: dateString, note: currentNote })
       .then(response => console.log('Nota añadida:', response))
       .catch(err => console.error(err));
   };
 
   const deleteNote = (dateString) => {
-    axios.delete(`${serverFront}/delete/${dateString}`)
+    axios.delete(`${serverFront}/api/delete/${dateString}`)
       .then(response => {
         const updatedNotes = { ...notes };
         delete updatedNotes[dateString];
