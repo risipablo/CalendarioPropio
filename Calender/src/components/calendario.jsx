@@ -13,7 +13,7 @@ function Calendario() {
   const [currentNote, setCurrentNote] = useState('');
 
   useEffect(() => {
-    axios.get(`${serverFront}/api/notes`)
+    axios.get(`${serverFront}/notes`)
       .then(response => setNotes(response.data))
       .catch(err => console.error(err));
   }, [serverFront]);
@@ -33,13 +33,13 @@ function Calendario() {
     setNotes(updatedNotes);
     setCurrentNote('');
 
-    axios.post(`${serverFront}/api/add`, { date: dateString, note: currentNote })
+    axios.post(`${serverFront}/add`, { date: dateString, note: currentNote })
       .then(response => console.log('Nota añadida:', response))
       .catch(err => console.error(err));
   };
 
   const deleteNote = (dateString) => {
-    axios.delete(`${serverFront}/api/delete/${dateString}`)
+    axios.delete(`${serverFront}/delete/${dateString}`)
       .then(response => {
         const updatedNotes = { ...notes };
         delete updatedNotes[dateString];
