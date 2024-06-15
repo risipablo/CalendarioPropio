@@ -114,6 +114,12 @@
     text-decoration: none;
 }
 
+.move{
+    display: block;
+    margin: 20px auto;
+    padding: .7rem 1rem;
+}
+
 @media (max-width: 600px) {
     .nota-input {
         flex-direction: column;
@@ -134,7 +140,10 @@
 
     .notas-buttons button {
         margin: 12px 0;
-        padding: 5px;
         font-size: .8rem;
+    }
+
+    .move{
+        padding: 0;
     }
 }

@@ -3,7 +3,8 @@ import axios from 'axios';
 import "./notas.css"
 import { NavLink } from "react-router-dom";
 
-const serverFront = "http://localhost:3001";
+const serverFront = 'https://servermern-yurb.onrender.com'
+// const serverFront="http://localhost:3001"
 
 export function Notas() {
     const [tasks, setTasks] = useState([]);
@@ -47,6 +48,22 @@ export function Notas() {
         .catch(err => console.log(err));
     }
 
+    const taksUp = (index) =>{
+        if(index > 0) {
+            const taskMove = [...tasks];
+            [taskMove[index], taskMove[index - 1]] = [taskMove[index - 1], taskMove[index]];
+            setTasks(taskMove);
+        }
+    }
+
+    const taksDown = (index) => {
+        if ( index < tasks.length - 1 ) {
+            const moveTask = [...tasks];
+            [moveTask[index], moveTask[index + 1 ]] = [moveTask[ index + 1], moveTask[index]];
+            setTasks(moveTask);
+        }
+    }
+
     return (
         <>
             <NavLink to="/"> <button className="calendario"> Calendario </button></NavLink>
@@ -69,19 +86,29 @@ export function Notas() {
                 </div>
                 <div className="notas">
                     <table>
+                        
                         <thead>
                             <tr>
+                                <th></th>
                                 <th>Tarea</th>
                                 <th>Descripcion</th>
                                 <th></th>
                             </tr>
+                            
                         </thead>
+                        
                         <tbody>
+                            
                             {tasks.map((element, index) => (
                                 <tr key={index} className={element.completed ? "completed" : ""}>
+                                    <div className="move">
+                                    <button onClick={() => taksUp(index)}> ☝️ </button>
+                                    <button onClick={() => taksDown(index)}> 👇 </button>
+                                    </div>
                                 <td>{element.task}</td>
                                 <td>{element.descripcion}</td>
                                     <td className="notas-buttons">
+                                    
                                     <button
                                             className={element.completed ? "desmarcar" : "completar"}
                                             onClick={() => taskCompleted(element._id, element.completed)}
