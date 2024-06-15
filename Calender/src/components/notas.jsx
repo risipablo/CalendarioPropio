@@ -3,7 +3,7 @@ import axios from 'axios';
 import "./notas.css"
 import { NavLink } from "react-router-dom";
 
-const serverFront = process.env.REACT_APP
+const serverFront = "http://localhost:3001";
 
 export function Notas() {
     const [tasks, setTasks] = useState([]);
