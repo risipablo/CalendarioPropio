@@ -52,6 +52,7 @@ export function Notas() {
             const taskMove = [...tasks];
             [taskMove[index], taskMove[index - 1]] = [taskMove[index - 1], taskMove[index]];
             setTasks(taskMove);
+            updateTaskOrder(taskMove);
         }
     }
 
@@ -60,7 +61,14 @@ export function Notas() {
             const moveTask = [...tasks];
             [moveTask[index], moveTask[index + 1 ]] = [moveTask[ index + 1], moveTask[index]];
             setTasks(moveTask);
+            updateTaskOrder(moveTask);;
         }
+    }
+    
+    // actualizar orden de tareas
+    const updateTaskOrder = (orderedTasks) => {
+        axios.post(`${serverFront}/update-order`, orderedTasks)
+            .catch(err => console.log(err));
     }
 
     return (

@@ -98,6 +98,21 @@ app.delete('/delete-task/:id', (req, res) => {
 });
 
 
+// ordenar tareas
+app.post('/update-order', async (req,res) => {
+  try{
+    const tasks = req.body;
+    const updatePromises = tasks.map((task,index) => {
+      return TareaModel.findByIdAndUpdate(task._id, {order:index}, {new:true});
+    });
+    await Promise.all(updatePromises);
+    res.json({message: "Orden actualizado"})
+  } catch{
+    res.status(500).json({ error: err.message });
+  }
+
+})
+
 
 // Start the server
 app.listen(3001, () => {
