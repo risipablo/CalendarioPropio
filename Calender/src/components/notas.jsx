@@ -14,7 +14,7 @@ export function Notas() {
         axios.get(`${serverFront}/tasks`)
             .then(response => setTasks(response.data))
             .catch(err => console.log(err));
-    }, []);
+    }, [serverFront]);
 
     // Se cambia la direccion 
     const addTask = () => {
