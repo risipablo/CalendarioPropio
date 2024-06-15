@@ -4,7 +4,6 @@ import "./notas.css"
 import { NavLink } from "react-router-dom";
 
 const serverFront = 'https://servermern-yurb.onrender.com'
-// const serverFront="http://localhost:3001"
 
 export function Notas() {
     const [tasks, setTasks] = useState([]);

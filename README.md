@@ -1,0 +1,1 @@
+Un proyecto de práctica personal que consiste en un calendario y un listado de tareas. El frontend se desarrolló con React, el backend con Node y Express, y usamos MongoDB Atlas para la base de datos. Les dejo el enlace en la descripción para que puedan verlo.
