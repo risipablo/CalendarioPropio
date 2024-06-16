@@ -19,11 +19,14 @@ function Calendario() {
       .catch(err => console.error(err));
   }, [serverFront]);
 
+
+
   const onChange = (newDate) => {
     setDate(newDate);
     const dateString = newDate.toDateString();
     setCurrentNote(notes[dateString]?.note || '');
   };
+
 
   const addNote = () => {
     const dateString = date.toDateString();
@@ -39,6 +42,8 @@ function Calendario() {
       .catch(err => console.error(err));
   };
 
+
+
   const deleteNote = (dateString) => {
     axios.delete(`${serverFront}/delete/${dateString}`)
       .then(response => {
@@ -49,6 +54,8 @@ function Calendario() {
       })
       .catch(err => console.error(err));
   };
+
+
 
   const getTileContent = ({ date, view }) => {
     if (view === 'month') {
@@ -62,10 +69,13 @@ function Calendario() {
     }
   };
 
+
+
   const isPastDate = (date) => {
     return date < new Date().setHours(0, 0, 0, 0);
   };
 
+  
   return (
     <>
       <div className="calendar-container">

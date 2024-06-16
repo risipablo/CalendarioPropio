@@ -3,32 +3,33 @@ import axios from 'axios';
 import "./notas.css"
 import { NavLink } from "react-router-dom";
 
+// const serverFront = "http://localhost:3001";
 const serverFront = 'https://servermern-yurb.onrender.com'
 
 export function Notas() {
     const [tasks, setTasks] = useState([]);
-    const [newTask, setNewtask] = useState("");
+    const [newTask, setNewtasks] = useState("");
     const [newDay, setnewDay] = useState(""); // se cambio day por descripcion
 
     useEffect(() => {
         axios.get(`${serverFront}/tasks`)
             .then(response => setTasks(response.data))
             .catch(err => console.log(err));
-    }, [serverFront]);
+    }, []);
 
-    // Se cambia la direccion 
+    // agregar notas
     const addTask = () => {
-        if (newTask.trim() && newDay.trim()) {
+        if (newTask.trim()) {
             axios.post(`${serverFront}/add-task`, { task: newTask, descripcion: newDay })
                 .then(response => {
                     setTasks([...tasks, { ...response.data, completed: false }]);
-                    setNewtask("");
-                    setnewDay("");
+                    setNewtasks("");  
+  
                 })
                 .catch(err => console.log(err));
         }
     };
-
+    
     const deleteTask = (id) => {
         axios.delete(`${serverFront}/delete-task/` + id)
             .then(response => {
@@ -80,7 +81,7 @@ export function Notas() {
                     <input
                         type="text"
                         placeholder="Agregar nueva tarea ...."
-                        onChange={(event) => setNewtask(event.target.value)}
+                        onChange={(event) => setNewtasks(event.target.value)}
                         value={newTask}
                     />
                     <input

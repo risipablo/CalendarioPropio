@@ -17,9 +17,9 @@ const TareaSchema = new mongoose.Schema({
     },
     order: { 
         type: Number,
-         required: true 
+         default: 0 
         } 
 })
 
 const TareaModel = mongoose.model("tasks", TareaSchema)
-module.exports = TareaModel;
+ = TareaModel;

@@ -32,23 +32,16 @@ app.get('/notes', async (req, res) => {
 
 // Añadimos las notas
 app.post('/add', async (req, res) => {
+  const { task, descripcion } = req.body;
+  if (!task || !descripcion) {
+      return res.status(400).json({ error: 'Task and description are required' });
+  }
   try {
-    const { date, note } = req.body;
-    if (!date || !note) {
-      return res.status(400).json({ error: 'Date and note are required' });
-    }
-    const existingNote = await NoteModel.findOne({ date });
-    if (existingNote) {
-      existingNote.note = note;
-      await existingNote.save();
-    } else {
-      const newNote = new NoteModel({ date, note });
-      await newNote.save();
-    }
-    res.json({ message: 'Nota agregada' });
+      const newTask = new TareaModel({ task, descripcion });
+      const result = await newTask.save();
+      res.json(result);
   } catch (err) {
-    console.error('Error al agregar la nota:', err);
-    res.status(500).json({ error: err.message });
+      res.status(500).json({ error: err.message });
   }
 });
 
@@ -71,14 +64,28 @@ app.get('/tasks', (req, res) => {
     .catch(err => res.status(500).json({ error: err.message }));
 });
 
+
+// Logica de notas
+
 // Agregar tareas
 app.post('/add-task', (req, res) => {
   const { task, descripcion } = req.body;
+  if (!task || !descripcion) {
+    return res.status(400).json({ error});
+  }
+  console.log('tarea recibida:', task, descripcion);
   const newTask = new TareaModel({ task, descripcion });
   newTask.save()
-    .then(result => res.json(result))
-    .catch(err => res.status(500).json({ error: err.message }));
+    .then(result => {
+      console.log(result);
+      res.json(result);
+    })
+    .catch(err => {
+      console.error(err); 
+      res.status(500).json({ error: err.message });
+    });
 });
+
 
 // marcar tareas realizadas
 app.patch('/update-task/:id', (req, res) => {
