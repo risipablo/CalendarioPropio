@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const NoteModel = require('./Models/Note');
+const Note = require('./Models/Note');
 const TareaModel = require('./Models/Tareas');
 require("dotenv").config();
 const app = express();
@@ -9,16 +9,17 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Conexion con mongo
+
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => console.log('Conexión exitosa con MongoDB'))
   .catch((err) => console.log('Conexión fallida: ' + err));
 
-// Obtenemos todas la notas
+
+// Get all notes
 app.get('/notes', async (req, res) => {
   try {
-    const notes = await NoteModel.find();
+    const notes = await Note.find();
     const notesMap = {};
     notes.forEach(note => {
       notesMap[note.date] = note;
@@ -30,21 +31,27 @@ app.get('/notes', async (req, res) => {
   }
 });
 
-// Añadimos las notas
-app.post('/add', async (req, res) => {
-  const { task, descripcion } = req.body;
-  if (!task || !descripcion) {
-      return res.status(400).json({ error: 'Task and description are required' });
-  }
+// Add a note
+app.post('/notes', async (req, res) => {
   try {
-      const newTask = new TareaModel({ task, descripcion });
-      const result = await newTask.save();
-      res.json(result);
+    const { date, note } = req.body;
+    if (!date || !note) {
+      return res.status(400).json({ error: 'Date and note are required' });
+    }
+    const existingNote = await Note.findOne({ date });
+    if (existingNote) {
+      existingNote.note = note;
+      await existingNote.save();
+    } else {
+      const newNote = new Note({ date, note });
+      await newNote.save();
+    }
+    res.json({ message: 'Nota agregada' });
   } catch (err) {
-      res.status(500).json({ error: err.message });
+    console.error('Error al agregar la nota:', err);
+    res.status(500).json({ error: err.message });
   }
 });
-
 // Eliminar notas
 app.delete('/delete/:date', async (req, res) => {
   try {
@@ -57,33 +64,30 @@ app.delete('/delete/:date', async (req, res) => {
   }
 });
 
-// Ontencion de tareas
+
+
+// Obtencion de tareas
 app.get('/tasks', (req, res) => {
   TareaModel.find()
     .then(tasks => res.json(tasks))
     .catch(err => res.status(500).json({ error: err.message }));
 });
 
-
-// Logica de notas
-
 // Agregar tareas
-app.post('/add-task', (req, res) => {
+app.post('/add-task', async (req, res) => {
   const { task, descripcion } = req.body;
-  if (!task || !descripcion) {
-    return res.status(400).json({ error});
-  }
-  console.log('tarea recibida:', task, descripcion);
-  const newTask = new TareaModel({ task, descripcion });
-  newTask.save()
-    .then(result => {
-      console.log(result);
-      res.json(result);
-    })
-    .catch(err => {
-      console.error(err); 
-      res.status(500).json({ error: err.message });
-    });
+  if(!task || !descripcion) {
+    return res.status(400).json({ error: "Task and description are required" });
+  } 
+  const nuevaTarea = new TareaModel({ task, descripcion });
+  nuevaTarea.save()
+  .then(result => {
+    res.json(result);
+  })
+  .catch(err => {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  });
 });
 
 

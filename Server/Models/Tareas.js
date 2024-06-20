@@ -22,4 +22,4 @@ const TareaSchema = new mongoose.Schema({
 })
 
 const TareaModel = mongoose.model("tasks", TareaSchema)
- = TareaModel;
+module.exports = TareaModel;

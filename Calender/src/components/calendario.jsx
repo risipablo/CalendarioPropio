@@ -17,16 +17,13 @@ function Calendario() {
     axios.get(`${serverFront}/notes`)
       .then(response => setNotes(response.data))
       .catch(err => console.error(err));
-  }, [serverFront]);
-
-
+  }, []);
 
   const onChange = (newDate) => {
     setDate(newDate);
     const dateString = newDate.toDateString();
     setCurrentNote(notes[dateString]?.note || '');
   };
-
 
   const addNote = () => {
     const dateString = date.toDateString();
@@ -37,12 +34,10 @@ function Calendario() {
     setNotes(updatedNotes);
     setCurrentNote('');
 
-    axios.post(`${serverFront}/add`, { date: dateString, note: currentNote })
-      .then(response => console.log('Nota añadida:', response))
-      .catch(err => console.error(err));
+    axios.post(`${serverFront}/notes`, { date: dateString, note: currentNote })
+      .then(response => console.log('Nota añadida:', response.data))
+      .catch(err => console.error('Error al agregar nota:', err));
   };
-
-
 
   const deleteNote = (dateString) => {
     axios.delete(`${serverFront}/delete/${dateString}`)
@@ -54,8 +49,6 @@ function Calendario() {
       })
       .catch(err => console.error(err));
   };
-
-
 
   const getTileContent = ({ date, view }) => {
     if (view === 'month') {
@@ -69,13 +62,10 @@ function Calendario() {
     }
   };
 
-
-
   const isPastDate = (date) => {
     return date < new Date().setHours(0, 0, 0, 0);
   };
 
-  
   return (
     <>
       <div className="calendar-container">

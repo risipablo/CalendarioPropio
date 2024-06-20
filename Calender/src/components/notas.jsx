@@ -9,35 +9,41 @@ const serverFront = 'https://servermern-yurb.onrender.com'
 export function Notas() {
     const [tasks, setTasks] = useState([]);
     const [newTask, setNewtasks] = useState("");
-    const [newDay, setnewDay] = useState(""); // se cambio day por descripcion
+    const [newDescripcion, setNewDescrition] = useState(""); // se cambio day por descripcion
+
 
     useEffect(() => {
         axios.get(`${serverFront}/tasks`)
-            .then(response => setTasks(response.data))
-            .catch(err => console.log(err));
-    }, []);
+        .then(response => {
+            setTasks(response.data)
+        })
+        .catch(err => console.log(err))
+    },[serverFront])
 
-    // agregar notas
     const addTask = () => {
-        if (newTask.trim()) {
-            axios.post(`${serverFront}/add-task`, { task: newTask, descripcion: newDay })
-                .then(response => {
-                    setTasks([...tasks, { ...response.data, completed: false }]);
-                    setNewtasks("");  
-  
-                })
-                .catch(err => console.log(err));
+        if(newTask.trim() && newDescripcion.trim()) {
+            axios.post(`${serverFront}/add-task`, {
+                task:newTask,
+                descripcion:newDescripcion
+            })
+            .then(response => {
+                const nuevaTarea = response.data;
+                setTasks(tasks => [...tasks, nuevaTarea])
+                setNewtasks("")
+                setNewDescrition("")
+            })
+            .catch(err => console.log(err))
         }
-    };
-    
+    }
+
     const deleteTask = (id) => {
         axios.delete(`${serverFront}/delete-task/` + id)
-            .then(response => {
-                const trash = tasks.filter((task) => task._id !== id);
-                setTasks(trash);
-            })
-            .catch(err => console.log(err));
-    };
+        .then( response => {
+            setTasks(tasks.filter((task) => task._id !== id))
+        })
+        .catch(err => console.log(err))
+    }
+
 
     const taskCompleted = (id,completed) =>{
         axios.patch(`${serverFront}/update-task/${id}`, { completed: !completed })
@@ -66,11 +72,12 @@ export function Notas() {
         }
     }
     
-    // actualizar orden de tareas
-    const updateTaskOrder = (orderedTasks) => {
-        axios.post(`${serverFront}/update-order`, orderedTasks)
-            .catch(err => console.log(err));
-    }
+
+        // actualizar orden de tareas
+        const updateTaskOrder = (orderedTasks) => {
+            axios.post(`${serverFront}/update-order`, orderedTasks)
+                .catch(err => console.log(err));
+        }
 
     return (
         <>
@@ -87,8 +94,8 @@ export function Notas() {
                     <input
                         type="text"
                         placeholder="Agregar descripcion ...."
-                        onChange={(event) => setnewDay(event.target.value)}
-                        value={newDay}
+                        onChange={(event) => setNewDescrition(event.target.value)}
+                        value={newDescripcion}
                     />
                     <button className="agregar" onClick={addTask}>Agregar</button>
                 </div>

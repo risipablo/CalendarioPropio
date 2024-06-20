@@ -1,7 +1,7 @@
 
 .nota {
     padding: 20px 30px;
-    max-width: 900px;
+    max-width: 1000px;
     margin: 4rem auto;
     background: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -60,7 +60,7 @@
 
     padding: 15px;
     border: 1px solid #ddd;
-    text-align: left;
+
 }
 
 .notas th {
@@ -128,6 +128,7 @@
 
     .nota-input input {
         margin: 0 0 10px 0;
+        width: 100%;
     }
 
     .nota-input button {
