@@ -52,21 +52,23 @@ app.post('/notes', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+
 // Eliminar notas
-app.delete('/delete/:date', async (req, res) => {
+app.delete('/delete-notes/:id', async (req,res) => {
+  const {id} = req.params;
   try {
-    const date = req.params.date;
-    await NoteModel.deleteOne({ date });
-    res.json({ message: 'Nota eliminada' });
+    const result = await Note.findByIdAndDelete(id)
+    res.json(result)
   } catch (err) {
-    console.error(err);
     res.status(500).json({ error: err.message });
   }
-});
+})
 
 
 
 // Obtencion de tareas
+
 app.get('/tasks', (req, res) => {
   TareaModel.find()
     .then(tasks => res.json(tasks))
@@ -76,56 +78,92 @@ app.get('/tasks', (req, res) => {
 // Agregar tareas
 app.post('/add-task', async (req, res) => {
   const { task, descripcion } = req.body;
-  if(!task || !descripcion) {
+  
+  if (!task || !descripcion) {
     return res.status(400).json({ error: "Task and description are required" });
-  } 
-  const nuevaTarea = new TareaModel({ task, descripcion });
-  nuevaTarea.save()
-  .then(result => {
-    res.json(result);
-  })
-  .catch(err => {
+  }
+  
+  try {
+    const nuevaTarea = new TareaModel({ task, descripcion });
+    const result = await nuevaTarea.save();
+    res.status(201).json(result);
+  } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message });
-  });
+  }
 });
 
-
-// marcar tareas realizadas
-app.patch('/update-task/:id', (req, res) => {
+// Marcar tareas realizadas
+app.patch('/update-task/:id', async (req, res) => {
   const { id } = req.params;
   const { completed } = req.body;
-  TareaModel.findByIdAndUpdate(id, { completed }, { new: true })
-    .then(result => res.json(result))
-    .catch(err => res.status(500).json({ error: err.message }));
-});
-
-// eliminar tareas
-app.delete('/delete-task/:id', (req, res) => {
-  const { id } = req.params;
-  TareaModel.findByIdAndDelete(id)
-    .then(result => res.json(result))
-    .catch(err => res.status(500).json({ error: err.message }));
-});
-
-
-// ordenar tareas
-app.post('/update-order', async (req,res) => {
-  try{
-    const tasks = req.body;
-    const updatePromises = tasks.map((task,index) => {
-      return TareaModel.findByIdAndUpdate(task._id, {order:index}, {new:true});
-    });
-    await Promise.all(updatePromises);
-    res.json({message: "Orden actualizado"})
-  } catch{
+  
+  if (typeof completed !== 'boolean') {
+    return res.status(400).json({ error: "Completed status is required and should be a boolean" });
+  }
+  
+  try {
+    const updatedTask = await TareaModel.findByIdAndUpdate(id, { completed }, { new: true });
+    if (!updatedTask) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+    res.json(updatedTask);
+  } catch (err) {
     res.status(500).json({ error: err.message });
   }
+});
 
-})
+// Eliminar tareas
+app.delete('/delete-task/:id', async (req, res) => {
+  const { id } = req.params;
+  
+  try {
+    const deletedTask = await TareaModel.findByIdAndDelete(id);
+    if (!deletedTask) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+    res.json({ message: "Task deleted successfully", deletedTask });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Editar Tareas
+app.patch('/edit-task/:id', async (req, res) => {
+  const { id } = req.params;
+  const { task, descripcion } = req.body;
+  
+  if (!task || !descripcion) {
+    return res.status(400).json({ error: "Task and description are required" });
+  }
+  
+  try {
+    const updatedTask = await TareaModel.findByIdAndUpdate(id, { task, descripcion }, { new: true });
+    if (!updatedTask) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+    res.json(updatedTask);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// // ordenar tareas
+// app.post('/update-order', async (req,res) => {
+//   try{
+//     const tasks = req.body;
+//     const updatePromises = tasks.map((task,index) => {
+//       return TareaModel.findByIdAndUpdate(task._id, {order:index}, {new:true});
+//     });
+//     await Promise.all(updatePromises);
+//     res.json({message: "Orden actualizado"})
+//   } catch{
+//     res.status(500).json({ error: err.message });
+//   }
+
+// })
 
 
-// Start the server
 app.listen(3001, () => {
   console.log('Servidor funcionando en el puerto 3001');
 });

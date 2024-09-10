@@ -39,16 +39,17 @@ function Calendario() {
       .catch(err => console.error('Error al agregar nota:', err));
   };
 
-  const deleteNote = (dateString) => {
-    axios.delete(`${serverFront}/delete/${dateString}`)
-      .then(response => {
-        const updatedNotes = { ...notes };
-        delete updatedNotes[dateString];
-        setNotes(updatedNotes);
-        console.log('Nota eliminada:', response);
-      })
-      .catch(err => console.error(err));
-  };
+  // las notas están almacenadas en un objeto
+
+  // const deleteNotes = (id) => {
+  //   axios.delete(`${serverFront}/delete-notes/${id}`)
+  //     .then(response => {
+  //       const updatedNotes = { ...notes };
+  //       delete updatedNotes[id]; // Elimina la nota del objeto por su id
+  //       setNotes(updatedNotes);
+  //     })
+  //     .catch(err => console.log(err));
+  // }
 
   const getTileContent = ({ date, view }) => {
     if (view === 'month') {
@@ -84,7 +85,7 @@ function Calendario() {
         />
         <div className="input-container">
           <button onClick={addNote} className="add-note-button">Agregar</button>
-          <button onClick={() => deleteNote(date.toDateString())} className="delete">Eliminar</button>
+          {/* <button onClick={() => deleteNotes(date.toDateString())} className="delete">Eliminar</button> */}
           <NavLink to="/notas"> <button className='ver-notas'> Ver Notas </button></NavLink>
         </div>
       </div>

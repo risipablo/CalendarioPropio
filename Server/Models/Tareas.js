@@ -14,11 +14,7 @@ const TareaSchema = new mongoose.Schema({
      completed: {
         type: Boolean,
         default: false,
-    },
-    order: { 
-        type: Number,
-         default: 0 
-        } 
+    }
 })
 
 const TareaModel = mongoose.model("tasks", TareaSchema)

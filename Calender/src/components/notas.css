@@ -1,8 +1,7 @@
-
 .nota {
     padding: 20px 30px;
-    max-width: 1000px;
-    margin: 4rem auto;
+    max-width: 1200px;
+    margin: 4rem 2rem;
     background: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
@@ -43,8 +42,9 @@
     background-color: #0e41c1;
 }
 
-.agregar:hover{
+.agregar:hover {
     background-color: #153ea7;
+    transform: scale(1.05);
 }
 
 .notas {
@@ -57,68 +57,138 @@
 }
 
 .notas th, .notas td {
-
     padding: 15px;
     border: 1px solid #ddd;
-
+   
 }
 
 .notas th {
     background-color: #0e41c1;
-    color: rgb(255, 255, 255);
+    color: #fff;
     text-align: center;
 }
 
 .notas td {
-    color: rgb(15, 15, 15);
+    color: #0f0f0f;
     text-align: center;
     font-weight: 600;
     font-size: 1rem;
+    
+}
+
+
+
+.notas-buttons {
+    display: flex;
+    justify-content: center;
+
 }
 
 .notas-buttons button {
-    margin-right: 12px;
+    margin: 0 8px;
     padding: 8px 12px;
     font-size: 1rem;
     cursor: pointer;
     border: none;
     border-radius: 4px;
+    display: flex;
+    align-items: center;
+}
+
+.notas-buttons button i {
+    align-items: center;
+    margin:  0 auto;
 }
 
 .completar {
-    background-color: rgb(3, 143, 3);
-    color: rgb(255, 255, 255);
+    background-color: #0ac70a;
+    color: #fff;
+}
+
+.completar:hover {
+    background-color: #027a02;
+    transform: scale(1.05);
 }
 
 .desmarcar {
-    background-color: rgb(241, 6, 6);
-    color: rgb(255, 255, 255);
+    background-color: #cf0606;
+    color: #fff;
+}
+
+.desmarcar:hover {
+    background-color: #c10505;
+    transform: scale(1.05);
 }
 
 .eliminar {
-    background-color: rgb(78, 74, 74);
-    color: rgb(255, 255, 255);
+    background-color: #f70202;
+    color: #fff;
+}
+
+.eliminar:hover {
+    background-color: #383535;
+    transform: scale(1.05);
+}
+
+.editar {
+    background-color: #ffb700;
+    color: #fff;
+}
+
+.editar:hover {
+    background-color: #e6a800;
+    transform: scale(1.05);
 }
 
 .completed td {
     text-decoration: line-through;
-    color: grey;
+    color: rgb(150, 146, 146);
 }
 
-.calendario{
+.calendario {
     margin: 30px;
     background-color: #080808;
     color: #fff;
-    border-radius:20px ;
+    border-radius: 20px;
     padding: 1rem;
     text-decoration: none;
 }
 
-.move{
-    display: block;
-    margin: 20px auto;
-    padding: .7rem 1rem;
-}
+.btn-edit {
+    display: flex;
+    gap: 10px; /* Espacio entre los botones */
+  }
+  
+  .check {
+    background-color: #4CAF50; /* Verde para check */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .check:hover {
+    background-color: #45a049; /* Color al pasar el cursor */
+  }
+  
+  .cancel {
+    background-color: #f44336; /* Rojo para cancel */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .cancel:hover {
+    background-color: #e53935; /* Color al pasar el cursor */
+  }
+  
 
 @media (max-width: 600px) {
     .nota-input {
@@ -144,7 +214,7 @@
         font-size: .8rem;
     }
 
-    .move{
+    .move {
         padding: 0;
     }
 }
