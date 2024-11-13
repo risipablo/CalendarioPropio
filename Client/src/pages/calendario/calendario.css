@@ -1,0 +1,223 @@
+/* Estilos para el contenedor del calendario */
+.calendar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 50px auto;
+  padding: 20px;
+  border: 2px solid rgb(33, 163, 100);
+  box-shadow: 0px 12px 22px rgb(25, 137, 83);
+  border-radius: 10px;
+  max-width: 800px;
+  background-color: #ffffff;
+  font-family: "Montserrat", serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilos para el título del calendario */
+.calendar-header {
+  font-size: 1.8rem;
+  color: #22a45c;
+  margin-bottom: 20px;
+}
+
+/* Estilos del calendario */
+.react-calendar {
+  border: none;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+
+}
+
+.note-container {
+  display: flex;
+  flex-direction: column; 
+  align-items: center; 
+}
+
+.note {
+  padding: 2rem;
+  font-size: .8rem;
+  color: #333;
+}
+
+
+/* Estilo de navegación en el calendario */
+.react-calendar__navigation button {
+  color: #22a465;
+  background: none;
+  font-size: 1.1rem;
+  padding: 8px;
+}
+
+/* Estilos de los días de la semana */
+.react-calendar__month-view__weekdays {
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #22a465;
+}
+
+/* Estilo de las celdas del calendario */
+.react-calendar__tile {
+  padding: 10px;
+  background: none;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.react-calendar__tile:enabled:hover,
+.react-calendar__tile:enabled:focus {
+  background: #d0e7ff;
+  border-radius: 10px;
+}
+
+.react-calendar__tile--now {
+  background: #f0f8ff;
+  border: 1px solid #30bd78;
+}
+
+.react-calendar__tile--active {
+  background: #30ad71;
+  color: white;
+  border-radius: 10px;
+}
+
+/* Estilos para el panel de notas */
+.note-panel {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 350px;
+  height: 120vh;
+  padding: 2rem 1rem;
+  border-left: 1px solid #dcdcdc;
+  background-color: #ffffff;
+  transform: translateX(-100%); 
+  transition: .3s ease-in-out;
+  box-shadow: 0px 12px 6px rgba(0, 0, 0, 0.9);
+  z-index: 1000;
+}
+
+.note-panel.visible {
+  transform: translateX(0);
+}
+
+
+/* Estilos para dispositivos móviles */
+@media only screen and (max-width: 750px) {
+  .note-panel{
+    width: 80%;
+  }
+
+  .note-panel.visible {
+    transform: translateY(0);
+  }
+
+  .note-item {
+    font-size: 0.9rem;
+  }
+}
+
+
+/* Estilos para el botón de cierre */
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 15px; 
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #272727;
+}
+
+
+.input-container{
+  margin: 2rem 0;
+}
+
+.input-container input{
+  padding: 0 2rem;
+  width: 50%;
+}
+
+.add-note-button {
+  padding: 8px 12px;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #228265;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 15px; 
+}
+
+.add-note-button:hover {
+  background-color: #2e9878;
+}
+
+.note-panel input[type="text"] {
+  width: 300px;
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 30px;
+  outline: none; 
+  border:2px solid #228265;
+  margin-top: 20px;
+  margin-bottom: 15px;
+  border-radius: 30px; 
+}
+
+.note-panel input[type="text"]:focus {
+  border-bottom: 2px solid #2e9878; 
+}
+
+/* Lista de notas */
+.note-list {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+
+/* Botón de eliminación de nota */
+.delete-note-button {
+  background-color: #e57373;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.delete-note-button:hover {
+  background-color: #d32f2f;
+}
+
+.note {
+  color: #333; /* Color de las notas */
+  padding: .2rem 2rem;
+}
+
+.note-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  margin-bottom: 8px;
+  background-color: #f7f7f7;
+  border-radius: 5px;
+  font-size: 1rem;
+  color: #333;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+

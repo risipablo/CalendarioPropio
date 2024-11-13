@@ -1,0 +1,220 @@
+.nota {
+    padding: 1.2rem;
+    max-width: 800px;
+    margin: 4rem auto;
+    background: #fff;
+    border-radius: 8px;
+}
+
+.nota h2 {
+    text-align: center;
+    color: #333;
+    margin: 1rem 0 2rem;
+}
+
+.nota-input {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1.4rem auto;
+}
+
+.nota-input input {
+    flex: 1;
+    padding: 12px;
+    font-size: 1rem;
+    margin-right: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.nota-input button {
+    padding: 12px;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    background-color: #22a465;
+    color: rgb(246, 240, 240);
+}
+
+.nota-input .agregar {
+    background-color: #22a465;
+    letter-spacing: 1px;
+}
+
+.agregar:hover {
+    background-color: #228a57;
+    transition: .3s;
+    transform: scale(1.03);
+}
+
+.notas {
+    overflow-x: auto;
+}
+
+.notas table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.2rem 0;
+}
+
+.notas th, .notas td {
+    padding: 15px;
+    border: 1px solid #ddd;
+   
+}
+
+.notas th {
+    background-color: #22a465;
+    color: #fff;
+    text-align: center;
+}
+
+.notas td {
+    color: #0f0f0f;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1rem;
+    
+}
+
+.descripcion, .notas-td{
+    max-width: 600px;
+    flex-wrap: wrap;
+}
+
+
+
+.notas-buttons {
+    display: flex;
+    justify-content: center;
+
+}
+
+.notas-buttons button {
+    margin: 0 8px;
+ 
+    padding: 8px 12px;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+}
+
+.notas-buttons button i {
+    align-items: center;
+    margin:  0 auto;
+}
+
+.completar {
+    background-color: #0ac70a;
+    color: #fff;
+}
+
+.completar:hover {
+    background-color: #027a02;
+    transform: scale(1.05);
+}
+
+.desmarcar {
+    background-color: #cf0606;
+    color: #fff;
+}
+
+.desmarcar:hover {
+    background-color: #c10505;
+    transform: scale(1.05);
+}
+
+.eliminar {
+    background-color: #f70202;
+    color: #fff;
+}
+
+.eliminar:hover {
+    background-color: #383535;
+    transform: scale(1.05);
+}
+
+.editar {
+    background-color: #ffb700;
+    color: #fff;
+}
+
+.editar:hover {
+    background-color: #e6a800;
+    transform: scale(1.05);
+}
+
+.completed td {
+    text-decoration: line-through;
+    color: rgb(150, 146, 146);
+}
+
+.btn-edit {
+    display: flex;
+    gap: 10px; /* Espacio entre los botones */
+  }
+  
+  .check {
+    background-color: #4CAF50; /* Verde para check */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .check:hover {
+    background-color: #45a049; /* Color al pasar el cursor */
+  }
+  
+  .cancel {
+    background-color: #f44336; /* Rojo para cancel */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .cancel:hover {
+    background-color: #e53935; /* Color al pasar el cursor */
+  }
+  
+
+@media (max-width: 600px) {
+    .nota-input {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .nota-input input {
+        margin: 0 0 10px 0;
+        width: 100%;
+    }
+
+    .nota-input button {
+        margin: 10px 0;
+    }
+
+    .notas th, .notas td {
+        padding: 8px;
+    }
+
+    .notas-buttons button {
+        margin: 12px 0;
+        font-size: .8rem;
+    }
+
+    .move {
+        padding: 0;
+    }
+}

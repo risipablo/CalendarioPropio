@@ -1,0 +1,21 @@
+
+
+.contianer-user{
+    justify-content: center;
+    padding: 3rem 0px;
+}
+
+.container-image{
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+
+.container-image img{
+    margin: .6rem auto;
+    display: block;
+    width: 200px;
+    height: 200px;
+    border-radius: 100%;
+    cursor: pointer;
+}

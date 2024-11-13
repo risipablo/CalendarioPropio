@@ -1,0 +1,156 @@
+.task-container {
+    padding: 1.2rem;
+    max-width: 800px;
+    margin: 3rem auto;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 2px solid rgb(163, 215, 164);
+    box-shadow: 0px 8px 6px rgba(82, 151, 83, 0.9);
+}
+
+h2 {
+    color: #333;
+    text-align: center;
+    margin: 1rem 0 2rem;
+}
+
+.task-input {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+}
+
+.task-input select, .task-input input {
+    padding: 10px;
+    width: 100%;
+    border-radius: 12px;
+    outline: none;
+    border: 1px solid #d1d5db;
+}
+
+.acciones {
+    display: flex;
+    gap: 12px;
+}
+
+.add-task {
+    background: #28a745;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background 0.3s ease;
+}
+
+.add-task:hover {
+    background: #218838;
+}
+
+.clean-task {
+    background: #8e28a7;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background 0.3s ease;
+}
+
+.clean-task:hover {
+    background: #742488;
+}
+
+@media (max-width: 768px) {
+    .task-container {
+        max-width: 400px;
+        margin: 2rem auto;
+    }
+
+    .task-input {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .acciones {
+        display: flex;
+        margin: 1rem 0;
+        gap: 3rem;
+    }
+
+    .task-input select, .task-input input {
+        width: 100%;
+        margin: .7rem auto;
+    }
+
+    .task-table table, .task-table th, .task-table td {
+        font-size: 14px;
+    }
+}
+
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.tareas-completas .completado {
+    text-decoration: line-through;
+    color: #a0aec0;
+}
+
+
+.tareas-completas button {
+    display: flex;
+    align-items: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: #121212;
+    transition: color 0.3s ease;
+}
+
+.tareas-completas button:hover {
+    color: #28a745; /* Cambia el color al pasar el cursor */
+}
+.task-table table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 2rem;
+}
+
+.task-table th, .task-table td {
+    text-align: center;
+    padding: 1.2rem;
+    justify-content: center;
+    border-bottom: 1px solid #fffefe;
+    white-space: nowrap;
+}
+
+.task-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.task-table tr:hover {
+    background-color: #e6f7e8;
+}
+
+.delete-task {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: #dc3545;
+}
+
+.delete-task:hover {
+    opacity: 0.7;
+}
