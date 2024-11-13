@@ -16,7 +16,7 @@ app.use(express.json());
 
 
 const corsOptions = {
-  origin: ['http://localhost:5173','https://proyecto-mern-six.vercel.app'],
+  origin: ['http://localhost:5173','https://proyecto-mern-six.vercel.app','https://servermern-yurb.onrender.com'],
   optionsSuccessStatus: 200,
   methods: 'GET,POST,DELETE,PATCH',
   credentials: true,
