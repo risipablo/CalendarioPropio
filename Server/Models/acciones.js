@@ -1,7 +1,7 @@
 
 const mongoose = require("mongoose");
 
-const TareaSchema = new mongoose.Schema({
+const accionesSchema = new mongoose.Schema({
     task: { 
         type: String, 
         required: true,
@@ -17,5 +17,5 @@ const TareaSchema = new mongoose.Schema({
     }
 })
 
-const TareaModel = mongoose.model("tasks", TareaSchema)
-module.exports = TareaModel;
+const accionModel = mongoose.model("acciones", accionesSchema)
+module.exports = accionModel;
