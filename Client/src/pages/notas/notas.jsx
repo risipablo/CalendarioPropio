@@ -7,7 +7,7 @@ import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import toast, { Toaster } from 'react-hot-toast';
 
 // const serverFront = "http://localhost:3001";
-const serverFront = 'https://servermern-yurb.onrender.com';
+const serverFront = 'https://calendariopropio.onrender.com/';
 
 export function Notas() {
     const [tasks, setTasks] = useState([]);
