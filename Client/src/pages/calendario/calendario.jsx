@@ -6,7 +6,7 @@ import './calendario.css';
 import axios from 'axios'
 
 // const serverFront = "http://localhost:3001";
-const serverFront = 'https://calendariopropio.onrender.com/'
+const serverFront = 'https://calendariopropio.onrender.com'
 
 
 const Calendario = () => {
