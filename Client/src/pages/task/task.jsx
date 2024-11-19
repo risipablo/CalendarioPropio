@@ -69,7 +69,7 @@ export function Task() {
                         tare._id === id ? { ...tare, completed: tareaActualizada.completed } : tare
                     )
                 );
-                if (!completed) {
+                if (response.data.completed) {
                     play();
                     toast.success(`Nota completada `);
                 } else {
@@ -218,10 +218,10 @@ export function Task() {
                                             {
                                                 editId === element._id ? (
                                                     <div className="edits-tareas">
-                                                        <button onClick={() => saveTasks(element._id)}>
+                                                        <button className="up" onClick={() => saveTasks(element._id)}>
                                                             <FontAwesomeIcon icon={faThumbsUp}/>
                                                         </button>
-                                                        <button onClick={cancelEdit}>
+                                                        <button className="down" onClick={cancelEdit}>
                                                             <FontAwesomeIcon icon={faThumbsDown}/>
                                                         </button>
                                                         

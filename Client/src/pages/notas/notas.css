@@ -74,7 +74,7 @@
 .notas td {
     color: #0f0f0f;
     text-align: center;
-    font-weight: 600;
+    /* font-weight: 600; */
     font-size: 1rem;
     
 }

@@ -198,7 +198,7 @@ export function Notas() {
                                             {editId === element._id ? (
                                                 <div className="btn-edit">
                                                     <button className="check" onClick={() => saveEdit(element._id)}>
-                                                        <i className="fa-solid fa-check"></i>
+                                                        <i class="fa-regular fa-thumbs-up"></i>
                                                     </button>
                                                     <button className="cancel" onClick={cancelEdit}>
                                                         <i className="fa-solid fa-ban"></i>

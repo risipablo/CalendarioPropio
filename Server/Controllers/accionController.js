@@ -76,7 +76,7 @@ exports.saveAccion = async (req, res) => {
     try {
       const updatedTask = await accionModel.findByIdAndUpdate(id, { task, descripcion }, { new: true });
       if (!updatedTask) {
-        return res.status(404).json({ error: "Task not found" });
+        return res.status(404).json({ error: "Note not found" });
       }
       res.json(updatedTask);
     } catch (err) {

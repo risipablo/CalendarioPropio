@@ -173,3 +173,11 @@ h2 {
     justify-content: center;
     padding: 1rem;
 }
+
+.up {
+   color: #0ac70a;
+}
+
+.down{
+    color:#961926
+}

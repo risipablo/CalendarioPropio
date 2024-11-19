@@ -40,17 +40,22 @@ exports.addCalender = async (req, res) => {
 };
 
 exports.deleteCalender = async (req, res) => {
-  const { date, noteContent } = req.body;
+  const { date, noteContent } = req.body; // Asegúrate de que "noteContent" contenga el string de la nota
 
   try {
     const result = await NoteModel.findOneAndUpdate(
-      { date },
-      { $pull: { notes: noteContent } },
-      { new: true }
+      { date }, // Busca el documento por la fecha
+      { $pull: { notes: noteContent } }, // Elimina la nota específica del array
+      { new: true } // Devuelve el documento actualizado
     );
 
-    res.json(result);
+    if (!result) {
+      return res.status(404).json({ message: 'No se encontró la fecha especificada.' });
+    }
+
+    res.json({ message: 'Nota eliminada correctamente', updatedDocument: result });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: err.message });
   }
 };

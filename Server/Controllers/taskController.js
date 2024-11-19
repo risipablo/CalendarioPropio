@@ -47,15 +47,38 @@ exports.completedTask = async (req,res) => {
     const { id } = req.params;
     const { completed } = req.body;
     
-    if (typeof completed !== 'boolean')
+    if (typeof completed !== 'boolean'){
         return res.status(400).json({error:'Error'})
-    
+    }
+      
     try{
         const updatedTask = await taskModel.findByIdAndUpdate(id, {completed}, {new:true})
-
-        if (!updatedTask)
+        if (!updatedTask){
             return res.status(404).json({ error: "Tarea no encontrada"})
+        }
+         res.json(updatedTask)
+
     } catch (err) {
-        res.status(500).json({ error:err.message})
+        res.status(500).json({ error: err.message})
+    }
+}
+
+exports.saveTask = async (req,res) => {
+    const {id} = req.params;
+    const {day,month,description} = req.body;
+
+    if (!day || !month || !description) {
+        return res.status(400).json({error:"completed the sections"})
+    }
+
+    try{
+        const saveAccions = await taskModel.findByIdAndUpdate(id, { day , month , description }, { new:true })
+        if (!saveAccions){
+            return res.status(404).json({error: "Tarea no encontrada"})
+        }
+        res.json(saveAccions)
+    }
+    catch (err){
+        res.status(500).json({error: err.message})
     }
 }

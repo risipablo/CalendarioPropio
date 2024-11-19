@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get('/notes',getCalender)
 router.post('/add-notes',addCalender)
-router.delete('/delete-notes/:id', deleteCalender);
+router.delete('/notes/:id', deleteCalender);
 
 
 module.exports = router;
