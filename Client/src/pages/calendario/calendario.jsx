@@ -56,10 +56,13 @@ const Calendario = () => {
   const deleteNote = (noteContent) => {
     const dateString = date.toDateString();
   
-    axios.delete(`${serverFront}/api/delete-notes`, { data: { date: dateString, noteContent } })
+    axios.delete(`${serverFront}/api/notes`, { data: { date: dateString, noteContent } })
       .then(response => {
         console.log('Nota eliminada:', response.data);
-        // Actualización del estado en el front-end
+        return axios.get(`${serverFront}/api/notes`); // Actualiza el estado de las notas
+      })
+      .then(response => {
+        setNotes(response.data);
       })
       .catch(err => console.error('Error al eliminar nota:', err));
   };

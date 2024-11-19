@@ -61,7 +61,7 @@
 
 .notas th, .notas td {
     padding: 15px;
-    border: 1px solid #ddd;
+    /* border: 1px solid #ddd; */
    
 }
 
@@ -96,7 +96,7 @@
     margin: 0 8px;
  
     padding: 8px 12px;
-    font-size: 1rem;
+    font-size: .8rem;
     cursor: pointer;
     border: none;
     border-radius: 4px;
@@ -156,7 +156,7 @@
 
 .btn-edit {
     display: flex;
-    gap: 10px; /* Espacio entre los botones */
+    gap: 8px; /* Espacio entre los botones */
   }
   
   .check {
@@ -164,7 +164,7 @@
     color: white;
     border: none;
     padding: 10px 15px;
-    font-size: 16px;
+    font-size: 12px;
     cursor: pointer;
     border-radius: 5px;
     transition: background-color 0.3s ease;
@@ -179,7 +179,7 @@
     color: white;
     border: none;
     padding: 10px 15px;
-    font-size: 16px;
+    font-size: 12px;
     cursor: pointer;
     border-radius: 5px;
     transition: background-color 0.3s ease;
@@ -198,7 +198,7 @@
 
     .nota-input input {
         margin: 0 0 10px 0;
-        width: 100%;
+        width: 90%;
     }
 
     .nota-input button {
@@ -213,7 +213,7 @@
         margin: 12px 0;
         font-size: .8rem;
     }
-
+      
     .move {
         padding: 0;
     }

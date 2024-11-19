@@ -5,6 +5,9 @@ import { ScrollTop } from "../../components/common/scrollTop";
 import { Button, Collapse } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import toast, { Toaster } from 'react-hot-toast';
+import useSound from 'use-sound';
+import check from "../../assets/check.mp3"
+
 
 // const serverFront = "http://localhost:3001";
 const serverFront = 'https://calendariopropio.onrender.com';
@@ -14,6 +17,8 @@ export function Notas() {
     const [newTask, setNewtasks] = useState("");
     const [newDescripcion, setNewDescrition] = useState("");
     const [showInputs,setShowInputs] = useState(false)
+    const [play] = useSound(check)
+    
 
     useEffect(() => {
         
@@ -61,8 +66,8 @@ export function Notas() {
                 const taskCompleted = tasks.map(task => task._id === id ? response.data : task)
                 setTasks(taskCompleted)
                 
-                if(response.data.completed){
-
+                if(!response.data.completed){
+                    play()
                     toast.success(`Nota completada `);
                 } else {
                     toast.error(`Nota incompleta `);
