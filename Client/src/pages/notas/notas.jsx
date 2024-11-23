@@ -7,6 +7,7 @@ import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import toast, { Toaster } from 'react-hot-toast';
 import useSound from 'use-sound';
 import check from "../../assets/check.mp3"
+import ok from "../../assets/digital.mp3"
 
 
 // const serverFront = "http://localhost:3001";
@@ -18,6 +19,7 @@ export function Notas() {
     const [newDescripcion, setNewDescrition] = useState("");
     const [showInputs,setShowInputs] = useState(false)
     const [play] = useSound(check)
+    const [play2] = useSound(ok)
     
 
     useEffect(() => {
@@ -43,6 +45,7 @@ export function Notas() {
                     toast.success('Nota agregada con éxito', {
                         position: 'center-right',
                     });
+                  
                 })
                 .catch(err => console.log(err));
         }

@@ -10,7 +10,7 @@ import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import { ScrollTop } from "../../components/common/scrollTop";
 import useSound from 'use-sound';
 import rayo from "../../assets/check.mp3"
-
+import ok from "../../assets/digital.mp3"
 
 // const serverFront = "http://localhost:3001";
 const serverFront = 'https://calendariopropio.onrender.com';
@@ -23,6 +23,7 @@ export function Task() {
     const [mes,setMes] = useState("")
     const [showInputs,setShowInputs] = useState(false)
     const [play] = useSound(rayo)
+    const [play2] = useSound(ok)
 
     useEffect(() => {
         axios.get(`${serverFront}/api/task`)
@@ -41,6 +42,7 @@ export function Task() {
                 toast.success('Tarea agregada con éxito', {
                     position: 'center-right',
                 });
+                play2()
             })
             .catch(err => console.log(err));
         }
@@ -54,6 +56,7 @@ export function Task() {
                 toast.error('Tarea eliminada ', {
                     position: 'top-center',
                 });
+                
             })
             .catch(err => console.error("Error deleting task:", err));
     };
