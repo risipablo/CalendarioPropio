@@ -85,9 +85,13 @@ h2 {
         gap: 3rem;
     }
 
-    .task-input select, .task-input input {
+    .task-input select {
         width: 100%;
         margin: .7rem auto;
+    }
+
+    .task-input input{
+        width: 90%;
     }
 
     .task-table table, .task-table th, .task-table td {
@@ -99,6 +103,11 @@ h2 {
 .table-responsive {
     width: 100%;
     overflow-x: auto;
+}
+
+.tareas-completas{
+    display: flex;
+    justify-content: space-between;
 }
 
 .tareas-completas .completado {
@@ -116,10 +125,11 @@ h2 {
     font-size: 16px;
     color: #121212;
     transition: color 0.3s ease;
+    margin-left: 1rem;
 }
 
 .tareas-completas button:hover {
-    color: #28a745; /* Cambia el color al pasar el cursor */
+    color: #28a745; 
 }
 .task-table table {
     width: 100%;
@@ -143,7 +153,29 @@ h2 {
     background-color: #e6f7e8;
 }
 
+.container-manydelete{
+    display: flex;
+    justify-content: center;
+    margin: 3rem auto 1rem;
+}
 
+.deletemany{
+    background: #dc3545;
+    border: none;
+    cursor: pointer;
+    border-radius: 12px;
+    font-size: 22px;
+    color: #ffffff;
+}
+
+.broom{
+    background: transparent;
+    border: none;
+    margin-left: 2rem;
+    cursor: pointer;
+    font-size: 22px;
+    color: #810ed8;
+}
 
 .delete-task {
     background: transparent;

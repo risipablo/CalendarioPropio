@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash,faPenToSquare,faThumbsUp,faThumbsDown } from "@fortawesome/free-solid-svg-icons";
+import { faTrash,faPenToSquare,faThumbsUp,faThumbsDown,faBroom } from "@fortawesome/free-solid-svg-icons";
 import toast, { Toaster } from 'react-hot-toast';
 import "./task.css";  
 import { Button, Collapse } from "@mui/material";
@@ -48,6 +48,14 @@ export function Task() {
         }
     };
 
+    // Limpiar inputs
+    const cleanTask = () =>{
+        setDescripcion("")
+        setDia("")
+        setMes("")
+    }
+
+    // Eliminar una tarea a la vez
     const deleteTarea = (id) => {
         axios.delete(`${serverFront}/api/task/` + id)
             .then(response => {
@@ -60,6 +68,35 @@ export function Task() {
             })
             .catch(err => console.error("Error deleting task:", err));
     };
+
+    const [selectedTasks, setSelectedTasks] = useState([]);
+
+        // Manejar la selección de tareas
+        const handleCheckboxChange = (id) => {
+            setSelectedTasks((prev) => 
+                prev.includes(id) ? prev.filter(taskId => taskId !== id) : [...prev, id]
+            );
+        };
+
+    const deleteMultipleTareas = (ids) => {
+        axios.delete(`${serverFront}/api/task`, { data: { ids } })
+            .then(response => {
+                setTarea(tarea => tarea.filter(tare => !ids.includes(tare._id)));
+                console.log(response.data.message);
+                toast.error(`${response.data.message}`, {
+                    position: 'top-center',
+                });
+            })
+            .catch(err => console.error("Error deleting tasks:", err));
+    };
+
+    const cleanManyTasks = () => {
+        setSelectedTasks("")
+    }
+
+
+
+
 
     const tasksCompleted = (id, completed) => {
         axios.patch(`${serverFront}/api/task/${id}/completed`, { completed: !completed })
@@ -81,13 +118,6 @@ export function Task() {
             })
             .catch(err => console.error('Error al actualizar tarea:', err));
     };
-    
-    const cleanTask = () =>{
-        setDescripcion("")
-        setDia("")
-        setMes("")
-    }
-
 
     // Edicion de tareas
     const [editId, setEditId] = useState(null);
@@ -186,6 +216,19 @@ export function Task() {
 
             </div>
 
+            <div className="container-manydelete">
+                    
+                    {selectedTasks.length > 0 && (
+                        <button onClick={() => deleteMultipleTareas(selectedTasks)} className="deletemany">
+                            <FontAwesomeIcon icon={faTrash} />
+                        </button>
+                        )}
+    
+                        {selectedTasks.length > 0 && (
+                            <button onClick={cleanManyTasks} className="broom">   <FontAwesomeIcon icon={faBroom} />  </button>
+                        )}
+            </div>
+
             <div className="task-table">
                 <div className="table-responsive">
                     <table>
@@ -200,14 +243,22 @@ export function Task() {
                             <Collapse  in={showInputs} timeout="auto" unmountOnExit>
                                 {tarea.map((element, index) => (
                                     <tr key={index} >
-                                        <td className={`tareas-completas ${element.completed ? "completado" : "incompleto"}`}>
-                                            <button
-                                                className={element.completed ? "incompleto" : "completado"}
-                                                onClick={() => tasksCompleted(element._id, element.completed)}
-                                            >
-                                                <i className={element.completed ? "fas fa-check" : "fa-regular fa-circle"}></i>
-                                            </button>
-                                        </td>
+                             <td className={`tareas-completas ${element.completed ? "completado" : "incompleto"}`}>
+                           
+                                <input
+                                    className="check"
+                                    type="checkbox"
+                                    checked={selectedTasks.includes(element._id)} 
+                                    onChange={() => handleCheckboxChange(element._id)} 
+                                />
+
+                                <button
+                                    className={element.completed ? "incompleto" : "completado"}
+                                    onClick={() => tasksCompleted(element._id, element.completed)}
+                                >
+                                    <i className={element.completed ? "fas fa-check" : "fa-regular fa-circle"}></i>
+                                </button>
+                            </td>
                                         
                                         <td>{editId === element._id ? ( <input value={editingId.day} onChange={(e) => setEditingId({...editingId, day:e.target.value})}/> ) : (element.day)}</td>
                                         <td>{editId === element._id ? ( <input value={editingId.month} onChange={(e) => setEditingId({...editingId, month:e.target.value})}/>) : (element.month)}</td>

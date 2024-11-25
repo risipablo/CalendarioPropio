@@ -26,6 +26,8 @@ exports.addTask = async (req, res) => {
 };
 
 
+//Eliminar una tarea por vez
+
 exports.deleteTask = async (req, res) => {
     const { id } = req.params;
 
@@ -42,6 +44,24 @@ exports.deleteTask = async (req, res) => {
         res.status(500).json({ error: "Server error: " + err.message });
     }
 };
+
+// Eliminar múltiples tareas
+exports.deleteMultipleTasks = async (req, res) => {
+    const { ids } = req.body; // Espera un array de IDs
+
+    if (!Array.isArray(ids) || ids.length === 0) {
+        return res.status(400).json({ error: "Se requiere un array de IDs" });
+    }
+
+    try {
+        // Elimina todas las tareas cuyos IDs estén en el array
+        const result = await taskModel.deleteMany({ _id: { $in: ids } });
+        res.json({ message: `${result.deletedCount} tareas eliminadas`, result });
+    } catch (err) {
+        res.status(500).json({ error: "Server error: " + err.message });
+    }
+};
+
 
 exports.completedTask = async (req,res) => {
     const { id } = req.params;
