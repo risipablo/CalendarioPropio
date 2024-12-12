@@ -24,6 +24,7 @@
     "react-hot-toast": "^2.4.1",
     "react-router-dom": "^6.27.0",
     "react-scroll": "^1.9.0",
+    "react-speech-recognition": "^3.10.0",
     "react-transition-group": "^4.4.5",
     "use-sound": "^4.0.3",
     "vercel": "^34.2.7"

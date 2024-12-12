@@ -67,10 +67,6 @@ exports.completedTask = async (req,res) => {
     const { id } = req.params;
     const { completed } = req.body;
     
-    if (typeof completed !== 'boolean'){
-        return res.status(400).json({error:'Error'})
-    }
-      
     try{
         const updatedTask = await taskModel.findByIdAndUpdate(id, {completed}, {new:true})
         if (!updatedTask){

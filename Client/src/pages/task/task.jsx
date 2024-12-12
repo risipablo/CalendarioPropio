@@ -1,12 +1,12 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash,faPenToSquare,faThumbsUp,faThumbsDown,faBroom } from "@fortawesome/free-solid-svg-icons";
 import toast, { Toaster } from 'react-hot-toast';
 import "./task.css";  
 import { Button, Collapse } from "@mui/material";
-import { ExpandLess, ExpandMore } from "@mui/icons-material";
+import { ExpandLess, ExpandMore,Mic } from "@mui/icons-material";
 import { ScrollTop } from "../../components/common/scrollTop";
 import useSound from 'use-sound';
 import rayo from "../../assets/check.mp3"
@@ -22,6 +22,7 @@ export function Task() {
     const [descripcion, setDescripcion] = useState("");
     const [mes,setMes] = useState("")
     const [showInputs,setShowInputs] = useState(false)
+    const [activeRow, setActiveRow] = useState(null);
     const [play] = useSound(rayo)
     const [play2] = useSound(ok)
 
@@ -72,11 +73,11 @@ export function Task() {
     const [selectedTasks, setSelectedTasks] = useState([]);
 
         // Manejar la selección de tareas
-        const handleCheckboxChange = (id) => {
-            setSelectedTasks((prev) => 
-                prev.includes(id) ? prev.filter(taskId => taskId !== id) : [...prev, id]
-            );
-        };
+    const handleCheckboxChange = (id) => {
+        setSelectedTasks((prev) => 
+            prev.includes(id) ? prev.filter(taskId => taskId !== id) : [...prev, id]
+        );
+    };
 
     const deleteMultipleTareas = (ids) => {
         axios.delete(`${serverFront}/api/task`, { data: { ids } })
@@ -93,10 +94,6 @@ export function Task() {
     const cleanManyTasks = () => {
         setSelectedTasks("")
     }
-
-
-
-
 
     const tasksCompleted = (id, completed) => {
         axios.patch(`${serverFront}/api/task/${id}/completed`, { completed: !completed })
@@ -161,6 +158,48 @@ export function Task() {
         )
     }
 
+    //Reconocimiento de voz
+    const recognition = useRef(null);
+    const [loading, setLoading] = useState(false);
+    
+    useEffect(() => {
+        recognition.current = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.current.lang = 'es-ES'; // Idioma en español
+        recognition.current.interimResults = false;
+    
+        recognition.current.onstart = () => {
+            setLoading(true);
+            toast.info("Hablando...", { position: "top-center" });
+        };
+    
+        recognition.current.onend = () => {
+            setLoading(false);
+        };
+    
+        recognition.current.onresult = (event) => {
+            const transcript = event.results[0][0].transcript.toLowerCase();
+            toast.success(`Texto capturado: "${transcript}"`, { position: "top-center" });
+    
+            if (!descripcion) {
+                setDescripcion(transcript); // tarea
+            } else if (!dia) {
+                setDia(transcript); // descripcion
+            }
+    
+            // Si ambos campos están llenos, agrega la nota automáticamente
+            if (descripcion.trim() && dia.trim()) {
+                addTarea();
+            }
+        };
+    }, [descripcion, dia]);
+    
+    const iniciarReconocimiento = () => {
+        if (recognition.current) {
+            recognition.current.start();
+        }
+    };
+
+
     return (
         <div className="task-container">
             <h2> Tareas </h2> 
@@ -202,7 +241,15 @@ export function Task() {
                     onChange={(e) => setDescripcion(e.target.value)}
                 />
 
-                <div className="acciones">
+                <div className="mic-container">
+                    <button className='mic' onClick={iniciarReconocimiento}>
+                        <Mic/>
+                    </button>
+                </div>               
+
+            </div>
+
+            <div className="acciones">
                     
                     <button className="add-task" onClick={addTarea}>
                         Agregar
@@ -211,8 +258,6 @@ export function Task() {
                     <button className="clean-task" onClick={cleanTask}>
                         Limpiar
                     </button>
-
-                </div>
 
             </div>
 
@@ -242,15 +287,23 @@ export function Task() {
 
                             <Collapse  in={showInputs} timeout="auto" unmountOnExit>
                                 {tarea.map((element, index) => (
-                                    <tr key={index} >
+                                    <tr 
+                                    key={index} 
+                                    onClick={() => setActiveRow(activeRow === element._id ? null : element._id)} // Toggle la fila activa
+                                    className={`row ${activeRow === element._id ? 'active' : ''}`}
+                                >
                              <td className={`tareas-completas ${element.completed ? "completado" : "incompleto"}`}>
                            
+                             {(activeRow === element._id || selectedTasks.includes(element._id)) && ( 
+                                // Mostrar el checkbox si la fila está activa o si la tarea ya está seleccionada
                                 <input
                                     className="check"
                                     type="checkbox"
-                                    checked={selectedTasks.includes(element._id)} 
-                                    onChange={() => handleCheckboxChange(element._id)} 
+                                    checked={selectedTasks.includes(element._id)}
+                                    onChange={() => handleCheckboxChange(element._id)}
                                 />
+                            )}
+
 
                                 <button
                                     className={element.completed ? "incompleto" : "completado"}

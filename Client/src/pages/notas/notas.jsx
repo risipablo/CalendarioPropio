@@ -1,13 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./notas.css";
 import axios from 'axios'
 import { ScrollTop } from "../../components/common/scrollTop";
 import { Button, Collapse } from '@mui/material';
-import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import { ExpandLess, ExpandMore,AddCircle,Mic} from '@mui/icons-material';
 import toast, { Toaster } from 'react-hot-toast';
 import useSound from 'use-sound';
 import check from "../../assets/check.mp3"
 import ok from "../../assets/digital.mp3"
+
 
 
 // const serverFront = "http://localhost:3001";
@@ -45,7 +46,7 @@ export function Notas() {
                     toast.success('Nota agregada con éxito', {
                         position: 'center-right',
                     });
-                  
+                  play()
                 })
                 .catch(err => console.log(err));
         }
@@ -64,14 +65,14 @@ export function Notas() {
 
 
     const taskCompleted = (id, completed) => {
-        axios.patch(`${serverFront}/api/acciones/${id}/completed`, { completed: !completed })
+        axios.patch(`${serverFront}/api/acciones/${id}`, { completed: !completed })
             .then(response => {
                 const taskCompleted = tasks.map(task => task._id === id ? response.data : task)
                 setTasks(taskCompleted)
-                
-                if(!response.data.completed){
-                    play()
+                play2()
+                if(response.data.completed){
                     toast.success(`Nota completada `);
+                   
                 } else {
                     toast.error(`Nota incompleta `);
                 }
@@ -122,27 +123,89 @@ export function Notas() {
 
     }
 
+    //Reconocimiento de voz
+    const recognition = useRef(null);
+    const [loading, setLoading] = useState(false);
+    
+    useEffect(() => {
+        recognition.current = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.current.lang = 'es-ES'; // Idioma en español
+        recognition.current.interimResults = false;
+    
+        recognition.current.onstart = () => {
+            setLoading(true);
+            toast.info("Hablando...", { position: "top-center" });
+        };
+    
+        recognition.current.onend = () => {
+            setLoading(false);
+        };
+    
+        recognition.current.onresult = (event) => {
+            const transcript = event.results[0][0].transcript.toLowerCase();
+            toast.success(`Texto capturado: "${transcript}"`, { position: "top-center" });
+    
+            if (!newTask) {
+                setNewtasks(transcript); // tarea
+            } else if (!newDescripcion) {
+                setNewDescrition(transcript); // descripcion
+            }
+    
+            // Si ambos campos están llenos, agrega la nota automáticamente
+            if (newTask.trim() && newDescripcion.trim()) {
+                addTask();
+            }
+        };
+    }, [newTask, newDescripcion]);
+    
+    const iniciarReconocimiento = () => {
+        if (recognition.current) {
+            recognition.current.start();
+        }
+    };
+    
+    // const detenerReconocimiento = () => {
+    //     if (recognition.current) {
+    //         recognition.current.stop();
+    //     }
+    // };
+    
+
     return (
         <>
             <div className="nota">
                 <h2>Notas adicionales</h2>
                 <div className="nota-input">
-                    <input
-                        type="text"
-                        placeholder="Agregar nueva tarea ...."
-                        onChange={(event) => setNewtasks(event.target.value)}
-                        value={newTask}
-                    />
-                    <input
-                        type="text"
-                        placeholder="Agregar descripcion ...."
-                        onChange={(event) => setNewDescrition(event.target.value)}
-                        value={newDescripcion}
-                    />
-                    <button className="agregar" onClick={addTask}>
-                         Agregar
-                    </button>
+                 
+                        <input
+                            type="text"
+                            placeholder="Agregar nueva tarea ...."
+                            onChange={(event) => setNewtasks(event.target.value)}
+                            value={newTask}
+                        />
+
+                   
+
+                        <input
+                            type="text"
+                            placeholder="Agregar descripción ...."
+                            onChange={(event) => setNewDescrition(event.target.value)}
+                            value={newDescripcion}
+                        />
+                 
+
+                    <div className="botones-mic">
+                        <button className='mic' onClick={iniciarReconocimiento} title="Dictar tarea y descripción">
+                            <Mic/>
+                        </button>
+
+                        <button className="agregar" onClick={addTask}>
+                            <AddCircle/>
+                        </button>
+                    </div>
+       
                 </div>
+
                 <div className="notas">
                     <table>
                         {/* <thead>

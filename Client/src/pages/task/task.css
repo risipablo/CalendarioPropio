@@ -32,6 +32,8 @@ h2 {
 .acciones {
     display: flex;
     gap: 12px;
+    margin: 2rem auto;
+    justify-content: center;
 }
 
 .add-task {
@@ -68,6 +70,21 @@ h2 {
     background: #742488;
 }
 
+.mic-container svg{
+    font-size: 2rem;
+}
+
+.mic-container button {
+    padding: 12px;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+}
+
+.mic{
+    background-color: #ffffff;
+    color: #228a57;
+}
 @media (max-width: 768px) {
     .task-container {
         max-width: 400px;

@@ -28,26 +28,41 @@
     border-radius: 4px;
 }
 
-.nota-input button {
+.botones-mic svg{
+    font-size: 2rem;
+}
+
+.botones-mic button {
     padding: 12px;
-    font-size: 1rem;
     cursor: pointer;
     border: none;
     border-radius: 4px;
-    background-color: #22a465;
-    color: rgb(246, 240, 240);
 }
 
 .nota-input .agregar {
-    background-color: #22a465;
+    background-color: #ffffff;
+
+    color: #228a57;
     letter-spacing: 1px;
 }
 
 .agregar:hover {
-    background-color: #228a57;
     transition: .3s;
-    transform: scale(1.03);
+    transform: scale(1.08);
 }
+
+.nota-input .mic{
+    
+    background-color: #ffffff;
+    color: #22a465;
+}
+
+.mic:hover{
+    transition: .3s;
+    transform: scale(1.08);
+}
+
+
 
 .notas {
     overflow-x: auto;
