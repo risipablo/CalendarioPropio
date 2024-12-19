@@ -36,7 +36,12 @@ export function Navbar(){
                         <NavLink to="/task" onClick={closeToggle}>
                             Tareas
                         </NavLink>
-
+                        
+                        <NavLink to="/record" onClick={closeToggle}>
+                            Notas de voz
+                        </NavLink>
+                        
+                        
                         <NavLink >
                         Cerrar Sesion
                         </NavLink>

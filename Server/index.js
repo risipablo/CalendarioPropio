@@ -6,13 +6,13 @@ const errorHandle = require('./Middleware/errorHandle');
 const accionRoutes = require('./Routes/accionRoutes');
 const calenderRoutes = require('./Routes/calenderRoutes')
 const taskRoutes = require('./Routes/taskRoutes')
-// const helmet = require('helmet');
-// const morgan = require('morgan');
+const audioRoutes = require('./Routes/audioRoutes')
+
+const path = require('path');
 
 const app = express();
 app.use(express.json());
-// app.use(helmet()); // Mejora la seguridad de tu aplicación
-// app.use(morgan('dev')); // Log de solicitudes
+
 
 
 const corsOptions = {
@@ -27,9 +27,17 @@ app.use(cors(corsOptions));
 app.use('/api', calenderRoutes)
 app.use('/api', accionRoutes);
 app.use('/api', taskRoutes)
+app.use('/api', audioRoutes);
+
+// Servir archivos estáticos
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+
 app.use(errorHandle);
 
 connectDB();
+
+
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

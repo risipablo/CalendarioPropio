@@ -31,19 +31,36 @@ const Calendario = () => {
   // Añadir una nueva nota
   const addNote = () => {
     const dateString = date.toDateString();
-  
+    
     if (currentNote.trim()) {
-      axios.post(`${serverFront}/api/add-notes`, { date: dateString, note: currentNote })
+      const newTask = {
+        date: dateString,
+        note: currentNote.trim()
+      };
+  
+      axios.post(`${serverFront}/api/add-notes`, newTask)
         .then(response => {
           console.log('Nota añadida:', response.data);
           return axios.get(`${serverFront}/api/notes`);
         })
         .then(response => {
-          setNotes(response.data);
-          setCurrentNote('');
+          setNotes(response.data); // Actualiza todas las notas
+          setCurrentNote(''); // Limpia el input
         })
         .catch(err => console.error('Error al agregar nota:', err));
     }
+  };
+  
+  const deleteNote = (noteId) => {
+    axios.delete(`${serverFront}/api/notes/${noteId}`)
+      .then(response => {
+        console.log('Nota eliminada:', response.data);
+        return axios.get(`${serverFront}/api/notes`);
+      })
+      .then(response => {
+        setNotes(response.data);
+      })
+      .catch(err => console.error('Error al eliminar nota:', err));
   };
   
 
@@ -53,19 +70,7 @@ const Calendario = () => {
   };
 
 
-  const deleteNote = (noteContent) => {
-    const dateString = date.toDateString();
   
-    axios.delete(`${serverFront}/api/notes`, { data: { date: dateString, noteContent } })
-      .then(response => {
-        console.log('Nota eliminada:', response.data);
-        return axios.get(`${serverFront}/api/notes`); // Actualiza el estado de las notas
-      })
-      .then(response => {
-        setNotes(response.data);
-      })
-      .catch(err => console.error('Error al eliminar nota:', err));
-  };
   
   return (
     <div className="calendar-app">
@@ -110,12 +115,12 @@ const Calendario = () => {
           </div>
 
           <ul className="note-list">
-            {notes[date.toDateString()] ? (
+            {notes[date.toDateString()] && notes[date.toDateString()].length > 0 ? (
               notes[date.toDateString()].map((note, index) => (
                 <li key={index} className="note-item">
-                  <span>{note.note}</span>
+                  <span>{note}</span>
                   <button
-                     onClick={() => deleteNote(date.toDateString(), note.noteId)}
+                    onClick={() => deleteNote(note)} // Pasa el contenido de la nota a eliminar
                     className="delete-note-button"
                   >
                     Eliminar
@@ -126,6 +131,7 @@ const Calendario = () => {
               <li className="note-item">No hay notas para este día</li>
             )}
           </ul>
+
         </div>
       )}
     </div>

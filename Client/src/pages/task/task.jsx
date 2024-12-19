@@ -240,16 +240,15 @@ export function Task() {
                     value={descripcion}
                     onChange={(e) => setDescripcion(e.target.value)}
                 />
-
-                <div className="mic-container">
-                    <button className='mic' onClick={iniciarReconocimiento}>
-                        <Mic/>
-                    </button>
-                </div>               
+             
 
             </div>
 
             <div className="acciones">
+
+                <button className='mic' onClick={iniciarReconocimiento}>
+                        <Mic/>
+                    </button>
                     
                     <button className="add-task" onClick={addTarea}>
                         Agregar
