@@ -1,12 +1,13 @@
 const fs = require('fs');
 const path = require('path');
-const audioModel = require('../Models/audioModel');
+const audioModel = require('../models/audioModel');
 
 exports.uploadAudio = async (req, res) => {
   try {
     const { filename, path: filepath } = req.file;
+    const { name } = req.body;
 
-    const newAudio = new audioModel({ filename, filepath });
+    const newAudio = new audioModel({ name, filename, filepath });
     await newAudio.save();
 
     res.status(200).json({ message: 'Audio subido correctamente', audio: newAudio });
