@@ -62,7 +62,6 @@ const Calendario = () => {
       })
       .catch(err => console.error('Error al eliminar nota:', err));
   };
-  
 
   // Cerrar el panel de notas
   const closeNotePanel = () => {

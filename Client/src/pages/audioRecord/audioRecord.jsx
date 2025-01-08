@@ -1,60 +1,51 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Button, Container, Typography, Grid, IconButton, Paper, Box, TextField } from '@mui/material';
-import { Mic, Stop, Save, Delete, Replay } from '@mui/icons-material';
+import { Button, Container, Grid, Paper, Typography, TextField, IconButton, Box } from '@mui/material';
+import { Mic, Stop, Save, Replay, Delete } from '@mui/icons-material';
+import { toast,Toaster } from 'react-hot-toast';
 
 // const serverFront = "http://localhost:3001";
-const serverFront = 'https://calendariopropio.onrender.com'
+const serverFront = 'https://calendariopropio.onrender.com';
+
+
 
 const AudioRecord = () => {
-  const [isRecording, setIsRecording] = useState(false)
-  const [audioBlob, setAudioBlob] = useState(null)
-  const [audioName, setAudioName] = useState('')
-  const [savedAudios, setSavedAudios] = useState([])
-  const mediaRecorderRef = useRef(null)
-  const audioChunks = useRef ([])
+  const [isRecording, setIsRecording] = useState(false);
+  const [audioBlob, setAudioBlob] = useState(null);
+  const [audioName, setAudioName] = useState('');
+  const [savedAudios, setSavedAudios] = useState([]);
+  const mediaRecorderRef = useRef(null);
+  const audioChunks = useRef([]);
 
-  // comenzar a grabar
   const startRecording = async () => {
-    try{
-      // solicitar permiso para acceder al microfono
+    try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      
-      // permite grabar el audio 
       mediaRecorderRef.current = new MediaRecorder(stream);
-      
-      // capturar los datos de audio
       mediaRecorderRef.current.ondataavailable = (event) => {
-        if(event.data.size > 0) {
-          audioChunks.current.push(event.data)
+        if (event.data.size > 0) {
+          audioChunks.current.push(event.data);
         }
-      }
+      };
 
-      // audios grabados
       mediaRecorderRef.current.onstop = () => {
-        const audioBlob = new Blob(audioChunks.current, {type: 'audio/wav'})
-        setAudioBlob(audioBlob) // se guarda en el estado de audio blob
-        audioChunks.current = []  // se limpiar el array
-      }
+        const audioBlob = new Blob(audioChunks.current, { type: 'audio/wav' });
+        setAudioBlob(audioBlob);
+        audioChunks.current = [];
+      };
 
-      // empezar a grabar
-      mediaRecorderRef.current.start()
-      setIsRecording(true) // se actualiza el estado
+      mediaRecorderRef.current.start();
+      setIsRecording(true);
     } catch (error) {
       console.error("Error al acceder al micrófono:", error);
     }
-  }
+  };
 
-
-  // detener la grabacion
   const stopRecording = () => {
-    // comprobar si el media existe
-    if(mediaRecorderRef.current) {
-      mediaRecorderRef.current.stop() // detiene el proceso de grabacion
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.stop();
     }
-    setIsRecording(false)
-  }
+    setIsRecording(false);
+  };
 
-  // guardar audios
   const saveRecording = async () => {
     if (audioBlob && audioName) {
       const formData = new FormData();
@@ -70,51 +61,48 @@ const AudioRecord = () => {
         setSavedAudios([...savedAudios, data.audio]);
         setAudioBlob(null);
         setAudioName('');
-        alert('Audio saved successfully!');
+        toast.success('Audio guardado con éxito!');
       } else {
-        alert('Failed to save audio.');
+        toast.error('No se pudo guardar el audio.');
       }
     } else {
-      alert('Please provide a name for the audio.');
+      toast.error('Por favor, proporciona un nombre para el audio.');
     }
   };
 
-  // anular grabacion
   const discardRecording = () => {
-    setAudioBlob(null)
-    setAudioName('')
-  }
+    setAudioBlob(null);
+    setAudioName('');
+    toast('Grabación descartada.');
+  };
 
-  // guardar audio en base de datos
   const fetchSavedAudios = async () => {
     const response = await fetch(`${serverFront}/api/audios`);
     const data = await response.json();
     setSavedAudios(data);
   };
 
-
-  // eliminar audio 
   const deleteAudio = async (id) => {
     const response = await fetch(`${serverFront}/api/audios/${id}`, {
       method: 'DELETE',
-    })
-
-    // si la solicitud es exitosa se el filtra el id del audio que se desea eliminar
-    if (response.ok){
-      setSavedAudios(savedAudios.filter(audio => audio._id !== id))
-      alert('Audio eliminado con exito')
+    });
+  
+    if (response.ok) {
+      setSavedAudios(savedAudios.filter((audio) => audio._id !== id));
+      toast.success('Audio eliminado con éxito!', {
+        icon: '❌', 
+      });
     } else {
-      alert ('Fallo en la eliminacion de audio')
+      toast.error('Fallo en la eliminación del audio.');
     }
-  }
+  };
 
-useEffect(() => {
+  useEffect(() => {
     fetchSavedAudios();
   }, []);
 
-
   return (
-    <Container maxWidth="md" sx={{ padding: 2 }}>
+    <Container maxWidth="md" sx={{ padding: 2 }} className='audio-container'>
       <Typography variant="h4" align="center" gutterBottom>
         Audio Recorder
       </Typography>
@@ -164,7 +152,7 @@ useEffect(() => {
         Audios Guardados
       </Typography>
       <Grid container spacing={2}>
-        {savedAudios.map(audio => (
+        {savedAudios.map((audio) => (
           <Grid item xs={12} sm={6} md={4} key={audio._id}>
             <Paper elevation={2} sx={{ padding: 2 }}>
               <Typography variant="subtitle1">{audio.filename}</Typography>
@@ -181,13 +169,9 @@ useEffect(() => {
           </Grid>
         ))}
       </Grid>
+      <Toaster/>
     </Container>
   );
 };
 
 export default AudioRecord;
-
-
-  
-
-

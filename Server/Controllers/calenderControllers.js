@@ -40,28 +40,21 @@ exports.addCalender = async (req, res) => {
 };
 
 exports.deleteCalender = async (req, res) => {
-  const { noteId } = req.params;
+  const { id } = req.params;
 
   try {
-    // Verificar si el campo 'notes' existe y es un array
-    const document = await NoteModel.findOne({ 'notes.id': noteId });
+    // Encuentra el documento que contiene la nota con el ID proporcionado
+    const document = await NoteModel.findOne({ 'notes._id': id });
 
-    if (!document || !Array.isArray(document.notes)) {
-      return res.status(404).json({ message: 'El campo notes no existe o no es un array.' });
-    }
-
-    // Aplicar $pull para eliminar la nota
-    const result = await NoteModel.findOneAndUpdate(
-      { 'notes.id': noteId },
-      { $pull: { notes: { id: noteId } } },
-      { new: true }
-    );
-
-    if (!result) {
+    if (!document) {
       return res.status(404).json({ message: 'No se encontró la nota con el ID proporcionado.' });
     }
 
-    res.json({ message: 'Nota eliminada correctamente', updatedDocument: result });
+    // Elimina la nota del array de notas
+    document.notes.id(id).remove();
+    await document.save();
+
+    res.json({ message: 'Nota eliminada correctamente', updatedDocument: document });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message });
