@@ -1,14 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Button, Container, Grid, Paper, Typography, TextField, IconButton, Box } from '@mui/material';
+import { Container, Typography, Grid, Button, Paper, TextField, Box, IconButton } from '@mui/material';
 import { Mic, Stop, Save, Replay, Delete } from '@mui/icons-material';
-import { toast,Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
+import axios from 'axios';
 
 // const serverFront = "http://localhost:3001";
 const serverFront = 'https://calendariopropio.onrender.com';
 
-
-
-const AudioRecord = () => {
+export const AudioRecord = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [audioBlob, setAudioBlob] = useState(null);
   const [audioName, setAudioName] = useState('');
@@ -51,18 +50,13 @@ const AudioRecord = () => {
       const formData = new FormData();
       formData.append('audio', audioBlob, `${audioName}.wav`);
 
-      const response = await fetch(`${serverFront}/api/upload`, {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setSavedAudios([...savedAudios, data.audio]);
+      try {
+        const response = await axios.post(`${serverFront}/api/upload`, formData);
+        setSavedAudios([...savedAudios, response.data.audio]);
         setAudioBlob(null);
         setAudioName('');
         toast.success('Audio guardado con éxito!');
-      } else {
+      } catch (error) {
         toast.error('No se pudo guardar el audio.');
       }
     } else {
@@ -77,22 +71,26 @@ const AudioRecord = () => {
   };
 
   const fetchSavedAudios = async () => {
-    const response = await fetch(`${serverFront}/api/audios`);
-    const data = await response.json();
-    setSavedAudios(data);
+    try {
+      const response = await axios.get(`${serverFront}/api/audios`);
+      setSavedAudios(response.data);
+    } catch (error) {
+      console.error('Error al obtener audios:', error);
+    }
   };
 
   const deleteAudio = async (id) => {
-    const response = await fetch(`${serverFront}/api/audios/${id}`, {
-      method: 'DELETE',
-    });
-  
-    if (response.ok) {
-      setSavedAudios(savedAudios.filter((audio) => audio._id !== id));
-      toast.success('Audio eliminado con éxito!', {
-        icon: '❌', 
-      });
-    } else {
+    try {
+      const response = await axios.delete(`${serverFront}/api/audios/${id}`);
+      if (response.status === 200) {
+        setSavedAudios(savedAudios.filter((audio) => audio._id !== id));
+        toast.success('Audio eliminado con éxito!', {
+          icon: '❌',
+        });
+      } else {
+        toast.error('Fallo en la eliminación del audio.');
+      }
+    } catch (error) {
       toast.error('Fallo en la eliminación del audio.');
     }
   };
@@ -169,9 +167,7 @@ const AudioRecord = () => {
           </Grid>
         ))}
       </Grid>
-      <Toaster/>
+      <Toaster />
     </Container>
   );
 };
-
-export default AudioRecord;

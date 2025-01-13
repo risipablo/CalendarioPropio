@@ -53,7 +53,7 @@ export function Notas() {
     };
 
     const deleteTask = (id) => {
-        axios.delete(`${serverFront}/api/acciones/` + id)
+        axios.delete(`${serverFront}/api/tareas/` + id)
             .then(response => {
                 setTasks(tasks => tasks.filter((task) => task._id !== id));
                 toast.error('Tarea eliminada ', {
@@ -65,7 +65,7 @@ export function Notas() {
 
 
     const taskCompleted = (id, completed) => {
-        axios.patch(`${serverFront}/api/acciones/${id}`, { completed: !completed })
+        axios.patch(`${serverFront}/api/tareas/${id}`, { completed: !completed })
             .then(response => {
                 const taskCompleted = tasks.map(task => task._id === id ? response.data : task)
                 setTasks(taskCompleted)
@@ -79,6 +79,7 @@ export function Notas() {
             })
             .catch(err => console.error("Error updating task:", err));
     };
+
     // Editar gastos
     const [editId, setEditId] = useState(null);
     const [editingId, setEditingId] = useState({
@@ -104,24 +105,28 @@ export function Notas() {
     }
 
     const saveEdit = (id) => {
+        console.log("Datos enviados:", editingId); // Para depuración
         toast.promise(
-            axios.patch(`${serverFront}/api/acciones/${id}`, editingId)
-            .then(response => {
-                setTasks(tasks.map(task => task._id === id ? response.data : task))
-                cancelEdit()
-            })
-            .catch(err => console.log(err)),
+            axios
+                .patch(`${serverFront}/api/tareas/${id}`, editingId)
+                .then((response) => {
+                    setTasks((prevTasks) =>
+                        prevTasks.map((task) =>
+                            task._id === id ? response.data : task
+                        )
+                    );
+                    cancelEdit();
+                })
+                .catch((err) => console.error("Error al guardar:", err)),
+            {
+                loading: "Guardando...",
+                success: <b>Nota guardada!</b>,
+                error: <b>No se pudo guardar.</b>,
+            }
+        );
+    };
+    
 
-            
-        {
-            loading: 'Guardando...',
-            success: <b>Nota guardada!</b>,
-            error: <b>No se pudo guardar.</b>,
-        }
-
-        )
-
-    }
 
     //Reconocimiento de voz
     const recognition = useRef(null);
