@@ -6,7 +6,6 @@ const errorHandle = require('./Middleware/errorHandle');
 const accionRoutes = require('./Routes/accionRoutes');
 const calenderRoutes = require('./Routes/calenderRoutes')
 const taskRoutes = require('./Routes/taskRoutes')
-const audioRoutes = require('./Routes/audioRoutes')
 
 const path = require('path');
 
@@ -27,7 +26,7 @@ app.use(cors(corsOptions));
 app.use('/api', calenderRoutes)
 app.use('/api', accionRoutes);
 app.use('/api', taskRoutes)
-app.use('/api', audioRoutes);
+
 
 // Servir archivos estáticos
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

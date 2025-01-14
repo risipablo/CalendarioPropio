@@ -10,7 +10,6 @@ import check from "../../assets/check.mp3"
 import ok from "../../assets/digital.mp3"
 
 
-
 // const serverFront = "http://localhost:3001";
 const serverFront = 'https://calendariopropio.onrender.com';
 
@@ -64,20 +63,25 @@ export function Notas() {
     };
 
 
-    const taskCompleted = (id, completed) => {
-        axios.patch(`${serverFront}/api/tareas/${id}`, { completed: !completed })
-            .then(response => {
-                const taskCompleted = tasks.map(task => task._id === id ? response.data : task)
-                setTasks(taskCompleted)
-                play2()
-                if(response.data.completed){
-                    toast.success(`Nota completada `);
-                   
-                } else {
-                    toast.error(`Nota incompleta `);
-                }
-            })
-            .catch(err => console.error("Error updating task:", err));
+    const taskCompleted = async (id, completed) => {
+        try {
+            const { data } = await axios.patch(`${serverFront}/api/tareas/${id}/completed`, {
+                completed: !completed,
+            });
+    
+            setTasks((prevTasks) =>
+                prevTasks.map((task) => (task._id === id ? data : task))
+            );
+    
+            play2();
+            if (data.completed) {
+                toast.success("Nota marcada como completada.");
+            } else {
+                toast.error("Nota marcada como incompleta.");
+            }
+        } catch (err) {
+            console.error("Error al marcar como completada:", err);
+        }
     };
 
     // Editar gastos
@@ -87,13 +91,6 @@ export function Notas() {
         descripcion: ''
     });
 
-    const editing = (task) => {
-        setEditId(task._id);
-        setEditingId({
-            task:task.task,
-            descripcion:task.descripcion,
-        });
-    }
 
 
     const cancelEdit = () => {
@@ -103,29 +100,31 @@ export function Notas() {
             descripcion: '',
         });
     }
+    const editing = (task) => {
+        setEditId(task._id);
+        setEditingId({
+            task: task.task,
+            descripcion: task.descripcion,
+        });
+    }
 
-    const saveEdit = (id) => {
-        console.log("Datos enviados:", editingId); // Para depuración
+
+    
+    const saveTask = (id) => {
         toast.promise(
-            axios
-                .patch(`${serverFront}/api/tareas/${id}`, editingId)
-                .then((response) => {
-                    setTasks((prevTasks) =>
-                        prevTasks.map((task) =>
-                            task._id === id ? response.data : task
-                        )
-                    );
-                    cancelEdit();
-                })
-                .catch((err) => console.error("Error al guardar:", err)),
+            axios.patch(`${serverFront}/api/tareas/${id}`, editingId)
+        .then(response => {
+            setTasks(tasks.map(task => task._id === id ? response.data : task))
+            cancelEdit()
+        })
+            .catch(err => console.log(err)),
             {
-                loading: "Guardando...",
-                success: <b>Nota guardada!</b>,
+                loading: 'Guardando...',
+                success: <b>Tarea guardada!</b>,
                 error: <b>No se pudo guardar.</b>,
             }
-        );
-    };
-    
+        )
+    }
 
 
     //Reconocimiento de voz
@@ -268,7 +267,7 @@ export function Notas() {
 
                                             {editId === element._id ? (
                                                 <div className="btn-edit">
-                                                    <button className="check" onClick={() => saveEdit(element._id)}>
+                                                    <button className="check" onClick={() => saveTask(element._id)}>
                                                         <i class="fa-regular fa-thumbs-up"></i>
                                                     </button>
                                                     <button className="cancel" onClick={cancelEdit}>
