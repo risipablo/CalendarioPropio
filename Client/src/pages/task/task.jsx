@@ -12,8 +12,8 @@ import useSound from 'use-sound';
 import rayo from "../../assets/check.mp3"
 import ok from "../../assets/digital.mp3"
 
-const serverFront = "http://localhost:3001";
-// const serverFront = 'https://calendariopropio.onrender.com';
+// const serverFront = "http://localhost:3001";
+const serverFront = 'https://calendariopropio.onrender.com';
 
 
 export function Task() {
