@@ -26,41 +26,6 @@ exports.addTask = async (req, res) => {
 };
 
 
-//Eliminar una tarea por vez
-
-exports.deleteTask = async (req, res) => {
-    const { id } = req.params;
-
-    try {
-        const taskDelete = await taskModel.findById(id);
-        if (!taskDelete) {
-            return res.status(404).json({ error: "Task not found" });
-        }
-
-        const result = await taskModel.findByIdAndDelete(id)
-        res.json({ message: 'tarea eliminada', result})
-
-    } catch (err) {
-        res.status(500).json({ error: "Server error: " + err.message });
-    }
-};
-
-// Eliminar múltiples tareas
-exports.deleteMultipleTasks = async (req, res) => {
-    const { ids } = req.body; // Espera un array de IDs
-
-    if (!Array.isArray(ids) || ids.length === 0) {
-        return res.status(400).json({ error: "Se requiere un array de IDs" });
-    }
-
-    try {
-        // Elimina todas las tareas cuyos IDs estén en el array
-        const result = await taskModel.deleteMany({ _id: { $in: ids } });
-        res.json({ message: `${result.deletedCount} tareas eliminadas`, result });
-    } catch (err) {
-        res.status(500).json({ error: "Server error: " + err.message });
-    }
-};
 
 
 exports.completedTask = async (req,res) => {
@@ -98,3 +63,54 @@ exports.saveTask = async (req,res) => {
         res.status(500).json({error: err.message})
     }
 }
+
+
+//Eliminar una tarea por vez
+
+exports.deleteTask = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const taskDelete = await taskModel.findById(id);
+        if (!taskDelete) {
+            return res.status(404).json({ error: "Task not found" });
+        }
+
+        const result = await taskModel.findByIdAndDelete(id)
+        res.json({ message: 'tarea eliminada', result})
+
+    } catch (err) {
+        res.status(500).json({ error: "Server error: " + err.message });
+    }
+};
+
+
+
+// Eliminar múltiples tareas
+exports.deleteMultipleTasks = async (req, res) => {
+    const { ids } = req.body; // Espera un array de IDs
+
+    if (!Array.isArray(ids) || ids.length === 0) {
+        return res.status(400).json({ error: "Se requiere un array de IDs" });
+    }
+
+    try {
+        // Elimina todas las tareas cuyos IDs estén en el array
+        const result = await taskModel.deleteMany({ _id: { $in: ids } });
+        res.json({ message: `${result.deletedCount} tareas eliminadas`, result });
+    } catch (err) {
+        res.status(500).json({ error: "Server error: " + err.message });
+    }
+};
+
+
+// Eliminar todas las tareas
+
+exports.deleteAllTask = async (req, res) => {
+    try {
+        const result = await taskModel.deleteMany({});
+        res.json({ message: 'Todas las tareas han sido eliminadas', result });
+    } catch (err) {
+        res.status(500).json({ error: "Server error: " + err.message });
+    }
+};

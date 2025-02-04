@@ -4,10 +4,11 @@ const connectDB = require('./Config/dataBase');
 const cors = require('cors');
 const errorHandle = require('./Middleware/errorHandle');
 const accionRoutes = require('./Routes/accionRoutes');
-const calenderRoutes = require('./Routes/calenderRoutes')
+const calenderNotes = require('./Routes/calenderRoutes')
 const taskRoutes = require('./Routes/taskRoutes')
 
 const path = require('path');
+
 
 const app = express();
 app.use(express.json());
@@ -23,7 +24,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 
-app.use('/api', calenderRoutes)
+app.use('/api', calenderNotes)
 app.use('/api', accionRoutes);
 app.use('/api', taskRoutes)
 

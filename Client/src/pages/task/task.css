@@ -173,29 +173,60 @@ h2 {
     background-color: #e6f7e8;
 }
 
-.container-manydelete{
-    display: flex;
-    justify-content: center;
-    margin: 3rem auto 1rem;
+.delete-all{
+    background-color: #db1e31;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    gap: 5px;
+    color: white;
 }
 
-.deletemany{
-    background: #dc3545;
+.delete-all:hover{
+    background-color: #b11525;
+}
+
+.container-manyproducts{
+    position: fixed;
+    max-width: 100px;
+}
+
+.container-manyproducts button{
+    margin: 12px 6px;
     border: none;
+    padding: 6px 12px;
     cursor: pointer;
-    border-radius: 12px;
-    font-size: 22px;
-    color: #ffffff;
+    border-radius: 50%; 
+    font-size: .9rem; 
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px; 
+    height: 35px;
+    transition: background-color 0.9s, color 0.3s; 
 }
 
 .broom{
-    background: transparent;
-    border: none;
-    margin-left: 2rem;
-    cursor: pointer;
-    font-size: 22px;
-    color: #810ed8;
+    margin-left: 1rem;
+    background-color: #561d93;
+    color: #ffffff;
 }
+
+.broom:hover{
+    background-color: #810ed8;
+}
+
+.delete-many{
+    color: #ffffff;
+    background-color: #a82020;
+}
+
+.delete-many:hover{
+    background-color: #f23030;
+}
+
+
 
 .delete-task {
     background: transparent;

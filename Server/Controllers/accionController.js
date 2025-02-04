@@ -66,21 +66,21 @@ exports.patchAccion = async (req, res) => {
 };
 
 
-exports.saveAccion = async (req,res) => {
-  const {id} = req.params;
+exports.saveAccion = async (req, res) => {
+  const { id } = req.params;
   const { task, descripcion } = req.body;
 
-  if(!task || !descripcion) {
-    return res.status(400).json({error:"completed the sections"})
+  if (!task || !descripcion) {
+      return res.status(400).json({ error: "Task and description are required" });
   }
 
-  try{
-    const saveTask = await accionModel.findByIdAndUpdate(id,{task,descripcion},{new:true})
-    if (!saveTask){
-      return res.status(404).json({error: "Nota no encontrada"})
-    } 
+  try {
+      const saveTask = await accionModel.findByIdAndUpdate(id, { task, descripcion }, { new: true });
+      if (!saveTask) {
+          return res.status(404).json({ error: "Nota no encontrada" });
+      }
+      res.json(saveTask);
+  } catch (err) {
+      res.status(500).json({ error: err.message });
   }
-  catch (err){
-    res.status(500).json({error:err.message})
-  }
-}
+};

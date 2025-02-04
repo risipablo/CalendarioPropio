@@ -1,62 +1,73 @@
+const Note = require("../Models/calenderNotes");
 
-const NoteModel = require('../Models/calenderNotes');
+// Obtener notas por fecha
+exports.getNotesByDate = async (req, res) => {
+    try {
+        const { date } = req.params;
+        const note = await Note.findOne({ date });
 
-exports.getCalender = async (req, res) => {
-  try {
-    const notes = await NoteModel.find();
-    // Convertimos las notas en un objeto con fechas como claves
-    const notesMap = notes.reduce((acc, note) => {
-      acc[note.date] = note.notes;
-      return acc;
-    }, {});
-    res.json(notesMap);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: err.message });
-  }
+        if (note) {
+            res.json(note.notes); // Devolver solo las notas en un array
+        } else {
+            res.json([]); // Si no hay notas, devolver un array vacío
+        }
+    } catch (err) {
+        res.status(500).json({ error: "Error al obtener las notas" });
+    }
 };
 
-exports.addCalender = async (req, res) => {
-  const { date, note } = req.body;
+// Agregar una nota
+exports.addNote = async (req, res) => {
+    try {
+        const { date, content } = req.body;
+        
+        if (!date || !content) {
+            return res.status(400).json({ error: "Fecha y contenido son obligatorios" });
+        }
 
-  try {
-    // Busca si ya existe una nota para la fecha dada
-    const existingNote = await NoteModel.findOne({ date });
+        // Busca si ya existe un documento para esa fecha
+        let existingNote = await Note.findOne({ date });
 
-    if (existingNote) {
-      // Si existe, añade la nueva nota al array
-      existingNote.notes.push(note);
-      await existingNote.save();
-    } else {
-      // Si no existe, crea un nuevo documento para la fecha
-      await NoteModel.create({ date, notes: [note] });
+        if (existingNote) {
+            // Si existe, agrega la nueva nota al array
+            existingNote.notes.push(content);
+            await existingNote.save();
+            res.status(201).json(existingNote);
+        } else {
+            // Si no existe, crea un nuevo documento con la fecha y la primera nota
+            const newNote = new Note({ date, notes: [content] });
+            await newNote.save();
+            res.status(201).json(newNote);
+        }
+    } catch (err) {
+        console.error("Error en addNote:", err);
+        res.status(500).json({ error: "Error al agregar la nota" });
     }
-
-    res.status(200).json({ message: 'Nota añadida correctamente' });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Error al agregar la nota' });
-  }
 };
 
-exports.deleteCalender = async (req, res) => {
-  const { id } = req.params;
 
-  try {
-    // Encuentra el documento que contiene la nota con el ID proporcionado
-    const document = await NoteModel.findOne({ 'notes._id': id });
+// Eliminar una nota
+exports.deleteNote = async (req, res) => {
+    try {
+        const { date, content } = req.body;
 
-    if (!document) {
-      return res.status(404).json({ message: 'No se encontró la nota con el ID proporcionado.' });
+        let existingNote = await Note.findOne({ date });
+
+        if (!existingNote) {
+            return res.status(404).json({ error: "No se encontraron notas para esta fecha" });
+        }
+
+        // Filtrar la nota a eliminar
+        existingNote.notes = existingNote.notes.filter(note => note !== content);
+
+        if (existingNote.notes.length > 0) {
+            await existingNote.save(); 
+        } else {
+            await Note.findOneAndDelete({ date }); 
+        }
+
+        res.json({ message: "Nota eliminada" });
+    } catch (err) {
+        res.status(500).json({ error: "Error al eliminar la nota" });
     }
-
-    // Elimina la nota del array de notas
-    document.notes.id(id).remove();
-    await document.save();
-
-    res.json({ message: 'Nota eliminada correctamente', updatedDocument: document });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: err.message });
-  }
 };

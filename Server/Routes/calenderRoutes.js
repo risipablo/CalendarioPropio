@@ -1,11 +1,10 @@
-const express = require('express');
-const { getCalender, deleteCalender, addCalender } = require('../Controllers/calenderControllers');
+const express = require("express");
+const { getNotesByDate,deleteNote, addNote } = require("../Controllers/calenderControllers");
 const router = express.Router();
 
 
-router.get('/notes',getCalender)
-router.post('/add-notes',addCalender)
-router.delete('/notes/:id', deleteCalender);
-
+router.get("/notes/:date", getNotesByDate); 
+router.post("/notes", addNote); 
+router.delete("/notes", deleteNote); 
 
 module.exports = router;

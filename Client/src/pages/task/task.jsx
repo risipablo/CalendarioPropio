@@ -12,8 +12,8 @@ import useSound from 'use-sound';
 import rayo from "../../assets/check.mp3"
 import ok from "../../assets/digital.mp3"
 
-// const serverFront = "http://localhost:3001";
-const serverFront = 'https://calendariopropio.onrender.com';
+const serverFront = "http://localhost:3001";
+// const serverFront = 'https://calendariopropio.onrender.com';
 
 
 export function Task() {
@@ -94,6 +94,26 @@ export function Task() {
     const cleanManyTasks = () => {
         setSelectedTasks("")
     }
+
+
+
+    // Eliminar todas las tareas
+    const deleteAllTasks = () => {
+        axios.delete(`${serverFront}/api/delete-task`)
+            .then(response => {
+                setTarea([]); 
+                toast.error('Todas las tareas eliminadas', {
+                    position: 'top-center',
+                });
+            })
+            .catch(err => {
+                console.error("Error deleting tasks:", err);
+                toast.error('Error al eliminar las tareas', {
+                    position: 'top-center',
+                });
+            });
+    };
+
 
     const tasksCompleted = (id, completed) => {
         axios.patch(`${serverFront}/api/task/${id}/completed`, { completed: !completed })
@@ -260,10 +280,10 @@ export function Task() {
 
             </div>
 
-            <div className="container-manydelete">
+            <div className="container-manyproducts">
                     
                     {selectedTasks.length > 0 && (
-                        <button onClick={() => deleteMultipleTareas(selectedTasks)} className="deletemany">
+                        <button onClick={() => deleteMultipleTareas(selectedTasks)} className="delete-many">
                             <FontAwesomeIcon icon={faTrash} />
                         </button>
                         )}
@@ -276,6 +296,7 @@ export function Task() {
             <div className="task-table">
                 <div className="table-responsive">
                     <table>
+                    <button onClick={deleteAllTasks} className="delete-all">Borrar Todo</button>
                         <tbody>
                             <Button
                                 onClick={() => setShowInputs(!showInputs)}
@@ -310,6 +331,8 @@ export function Task() {
                                 >
                                     <i className={element.completed ? "fas fa-check" : "fa-regular fa-circle"}></i>
                                 </button>
+
+                                
                             </td>
                                         
                                         <td>{editId === element._id ? ( <input value={editingId.day} onChange={(e) => setEditingId({...editingId, day:e.target.value})}/> ) : (element.day)}</td>

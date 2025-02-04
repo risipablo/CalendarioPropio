@@ -110,22 +110,20 @@ export function Notas() {
 
 
     
-    const saveTask = (id) => {
-        toast.promise(
-            axios.patch(`${serverFront}/api/tareas/${id}`, editingId)
-        .then(response => {
-            setTasks(tasks.map(task => task._id === id ? response.data : task))
-            cancelEdit()
-        })
-            .catch(err => console.log(err)),
-            {
-                loading: 'Guardando...',
-                success: <b>Tarea guardada!</b>,
-                error: <b>No se pudo guardar.</b>,
-            }
-        )
-    }
-
+    const saveTask = async (id) => {
+        try {
+            toast.loading('Guardando...', { id: 'saving' });
+            const response = await axios.patch(`${serverFront}/api/tareas/${id}`, editingId);
+            setTasks(tasks.map(task => task._id === id ? response.data : task));
+            cancelEdit();
+            toast.dismiss('saving');
+            toast.success('Tarea guardada!', { id: 'saving' });
+        } catch (err) {
+            toast.dismiss('saving');
+            toast.error('No se pudo guardar.', { id: 'saving' });
+            console.log(err);
+        }
+    };
 
     //Reconocimiento de voz
     const recognition = useRef(null);

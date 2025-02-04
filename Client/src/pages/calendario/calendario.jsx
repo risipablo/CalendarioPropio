@@ -1,133 +1,106 @@
-// import React, { useState, useEffect } from 'react';
-// import Calendar from 'react-calendar';
-// import 'react-calendar/dist/Calendar.css';
-// import './calendario.css';
-// import axios from 'axios';
-// import toast, { Toaster } from 'react-hot-toast';
+import React, { useState, useEffect } from "react";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+import { FaTrash } from "react-icons/fa";
+import axios from "axios";
+import "./calendario.css";
 
-// // const serverFront = "http://localhost:3001";
-// const serverFront = 'https://calendariopropio.onrender.com';
+// const serverFront = "http://localhost:3001";
+const serverFront = 'https://calendariopropio.onrender.com';
 
-// const Calendario = () => {
-//   const [date, setDate] = useState(new Date());
-//   const [notes, setNotes] = useState({});
-//   const [currentNote, setCurrentNote] = useState('');
-//   const [isNotePanelVisible, setNotePanelVisible] = useState(false);
+const Calender = () => {
+    const [date, setDate] = useState(new Date());
+    const [notes, setNotes] = useState([]);
+    const [newNote, setNewNote] = useState("");
 
-//   // Cargar notas desde el backend al iniciar
-//   useEffect(() => {
-//     axios.get(`${serverFront}/api/notes`)
-//       .then(response => setNotes(response.data))
-//       .catch(err => console.error(err));
-//   }, []);
+    const formatDate = (date) => {
+        return date.toISOString().split("T")[0];
+    };
 
-//   // Manejar el cambio de fecha y mostrar el panel de notas
-//   const onChange = (newDate) => {
-//     setDate(newDate);
-//     setNotePanelVisible(true);
-//   };
+    // Obtener notas del backend
+    const fetchNotes = async () => {
+        try {
+            const formattedDate = formatDate(date);
+            const response = await axios.get(
+                `${serverFront}/api/notes/${formattedDate}`
+            );
+            setNotes(response.data);
+        } catch (err) {
+            console.error("Error obteniendo notas:", err);
+        }
+    };
 
-//   // Añadir una nueva nota
-//   const addNote = () => {
-//     const dateString = date.toDateString();
-    
-//     if (currentNote.trim()) {
-//       const newTask = {
-//         date: dateString,
-//         note: currentNote.trim()
-//       };
+    // Agregar una nota al backend
+    const addNote = async () => {
+      if (!newNote.trim()) return;
   
-//       axios.post(`${serverFront}/api/add-notes`, newTask)
-//         .then(response => {
-//           console.log('Nota añadida:', response.data);
-//           return axios.get(`${serverFront}/api/notes`);
-//         })
-//         .then(response => {
-//           setNotes(response.data); // Actualiza todas las notas
-//           setCurrentNote(''); // Limpia el input
-//         })
-//         .catch(err => console.error('Error al agregar nota:', err));
-//     }
-//   };
-  
-//   const deleteNote = (noteId) => {
-//     axios.delete(`${serverFront}/api/notes/${noteId}`)
-//       .then(response => {
-//         console.log('Nota eliminada:', response.data);
-//         return axios.get(`${serverFront}/api/notes`);
-//       })
-//       .then(response => {
-//         setNotes(response.data);
-//       })
-//       .catch(err => console.error('Error al eliminar nota:', err));
-//   };
+      try {
+          const formattedDate = formatDate(date);
+          const response = await axios.post(`${serverFront}/api/notes`, {
+            date: formattedDate,
+            content: newNote,
+          });
+          setNotes([...notes, response.data]);
+          setNewNote("");
+      } catch (err) {
+          console.error("Error agregando nota:", err);
+      }
+  };
 
-//   // Cerrar el panel de notas
-//   const closeNotePanel = () => {
-//     setNotePanelVisible(false);
-//   };
 
-//   return (
-//     <div className="calendar-app">
-//       <div className={`calendar-container ${isNotePanelVisible ? 'shifted' : ''}`}>
-//         <h1 className="calendar-header">Calendario</h1>
-        
-//         <Calendar
-//           onChange={onChange}
-//           value={date}
-//           tileContent={({ date }) => {
-//             const dateString = date.toDateString();
-//             const dayNotes = notes[dateString];
-//             return (
-//               <div className="note-container">
-//                 {Array.isArray(dayNotes) && dayNotes.map((note, index) => (
-//                   <span key={index} className="note">{note}</span>
-//                 ))}
-//               </div>
-//             );
-//           }}
-//           tileDisabled={({ date }) => date < new Date().setHours(0, 0, 0, 0)}
-//         />
-//       </div>
 
-//       {isNotePanelVisible && (
-//         <div className="note-panel visible">
-//           <button onClick={closeNotePanel} className="close-button">x</button>
+    // Eliminar una nota del backend
+    const deleteNote = async (content) => {
+        try {
+            const formattedDate = formatDate(date);
+            await axios.delete(`${serverFront}/api/notes`, { 
+                data: { 
+                    date: formattedDate, 
+                    content 
+                } 
+            });
+            setNotes(notes.filter(note => note !== content)); 
+        } catch (err) {
+            console.error("Error eliminando nota:", err);
+        }
+    };
 
-//           <div className="input-container">
-//             <input
-//               type="text"
-//               value={currentNote}
-//               onChange={(e) => setCurrentNote(e.target.value)}
-//               placeholder="Escribe tu nota aquí"
-//             />
-//             <button onClick={addNote} className="add-note-button">
-//               Agregar
-//             </button>
-//           </div>
+    // Efecto para cargar notas cuando cambia la fecha
+    useEffect(() => {
+        fetchNotes();
+    }, [date]);
 
-//           <ul className="note-list">
-//             {Array.isArray(notes[date.toDateString()]) && notes[date.toDateString()].length > 0 ? (
-//               notes[date.toDateString()].map((note, index) => (
-//                 <li key={index} className="note-item">
-//                   <span>{note}</span>
-//                   <button
-//                     onClick={() => deleteNote(note._id)} // Asegúrate de pasar el identificador único de la nota
-//                     className="delete-note-button"
-//                   >
-//                     Eliminar
-//                   </button>
-//                 </li>
-//               ))
-//             ) : (
-//               <li className="note-item">No hay notas para este día</li>
-//             )}
-//           </ul>
-//         </div>
-//       )}
-//       <Toaster />
-//     </div>
-//   );
-// };
+    return (
+        <div className="calendar-container">
+            <h2>Calendario de Notas</h2>
+            <Calendar onChange={setDate} value={date} />
+                <div className="notes-container">
+                    <h3>Notas para el {date.toLocaleDateString()}</h3>
+                    <ul>
+                        {notes.map((note, index) => (
+                            <li key={index}>
+                                {note}
+                                <button onClick={() => deleteNote(note)}>
+                                    <FaTrash />
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                    <div className="input">
+                    <input
+                        type="text"
+                        value={newNote}
+                        onChange={(e) => setNewNote(e.target.value)}
+                        placeholder="Escriba alguna nota"
+                        onKeyPress={(e) => e.key === 'Enter' && addNote()}
+                    />
+                    <button onClick={addNote}>Agregar</button>
+                    </div>
 
-// export default Calendario;
+                </div>
+
+        </div>
+    );
+};
+
+export default Calender;

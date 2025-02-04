@@ -1,13 +1,8 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const noteSchema = new mongoose.Schema({
-  date: { type: String, required: true },
-  notes: [
-    {
-      _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
-      note: { type: String, required: true }
-    }
-  ]
+const NoteSchema = new mongoose.Schema({
+    date: { type: String, required: true, unique: true }, // Fecha única por día
+    notes: [{ type: String, required: true }] // Array de notas en el mismo día
 });
 
-module.exports = mongoose.model('Note', noteSchema);
+module.exports = mongoose.model("Note", NoteSchema);
