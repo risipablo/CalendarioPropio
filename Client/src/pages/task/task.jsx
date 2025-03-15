@@ -11,16 +11,18 @@ import { ScrollTop } from "../../components/common/scrollTop";
 import useSound from 'use-sound';
 import rayo from "../../assets/check.mp3"
 import ok from "../../assets/digital.mp3"
+import { Modal } from "../../components/common/modal/modal";
 
-const serverFront = "http://localhost:3001";
-// const serverFront = 'https://calendariopropio.onrender.com';
+// const serverFront = "http://localhost:3001";
+const serverFront = 'https://calendariopropio.onrender.com';
 
 
 export function Task() {
     const [tarea, setTarea] = useState([]);
-    const [dia, setDia] = useState("");
+    const [date,setDate] = useState(() => {
+        return localStorage.getItem('fecha' || "00-00-0000")
+    })
     const [descripcion, setDescripcion] = useState("");
-    const [mes,setMes] = useState("")
     const [showInputs,setShowInputs] = useState(false)
     const [activeRow, setActiveRow] = useState(null);
     const [play] = useSound(rayo)
@@ -33,12 +35,11 @@ export function Task() {
     }, [serverFront]);
 
     const addTarea = () => {
-        if (dia.trim() && descripcion.trim() && mes.trim()) {
-            axios.post(`${serverFront}/api/add-task`, { day: dia, description: descripcion, month:mes })
+        if (date.trim() && descripcion.trim() ) {
+            axios.post(`${serverFront}/api/add-task`, { date: date, description: descripcion })
             .then(response => {
                 setTarea(tarea => [...tarea, response.data]);
-                setDia("");
-                setMes("")
+                setDate("")
                 setDescripcion("");
                 toast.success('Tarea agregada con éxito', {
                     position: 'center-right',
@@ -52,10 +53,10 @@ export function Task() {
     // Limpiar inputs
     const cleanTask = () =>{
         setDescripcion("")
-        setDia("")
-        setMes("")
+        setDate("")
     }
 
+    
     // Eliminar una tarea a la vez
     const deleteTarea = (id) => {
         axios.delete(`${serverFront}/api/task/` + id)
@@ -70,6 +71,9 @@ export function Task() {
             .catch(err => console.error("Error deleting task:", err));
     };
 
+
+    
+
     const [selectedTasks, setSelectedTasks] = useState([]);
 
         // Manejar la selección de tareas
@@ -79,10 +83,12 @@ export function Task() {
         );
     };
 
+
     const deleteMultipleTareas = (ids) => {
         axios.delete(`${serverFront}/api/task`, { data: { ids } })
             .then(response => {
                 setTarea(tarea => tarea.filter(tare => !ids.includes(tare._id)));
+                setShowModal(false)
                 console.log(response.data.message);
                 toast.error(`${response.data.message}`, {
                     position: 'top-center',
@@ -96,7 +102,11 @@ export function Task() {
     }
 
 
+    const [showModal,setShowModal] = useState(false)
 
+    const deleteAll = () => {
+        setShowModal(true)
+    }
     // Eliminar todas las tareas
     const deleteAllTasks = () => {
         axios.delete(`${serverFront}/api/delete-task`)
@@ -139,16 +149,14 @@ export function Task() {
     // Edicion de tareas
     const [editId, setEditId] = useState(null);
     const [editingId, setEditingId] = useState({
-        day:'',
-        month:'',
+        date:'',
         description:''
     })
 
     const editing = (tare) => {
         setEditId(tare._id);
         setEditingId({
-            day:tare.day,
-            month:tare.month,
+            date:tare.date,
             description:tare.description
         })
     }
@@ -211,7 +219,7 @@ export function Task() {
                 addTarea();
             }
         };
-    }, [descripcion, dia]);
+    }, [descripcion, date]);
     
     const iniciarReconocimiento = () => {
         if (recognition.current) {
@@ -225,34 +233,7 @@ export function Task() {
             <h2> Tareas </h2> 
             <div className="task-input">
 
-                <select onChange={(event) => setDia(event.target.value)} value={dia}>
-                    <option value="">Seleccionar Día</option>
-                    <option value="Lunes">Lunes</option>
-                    <option value="Martes">Martes</option>
-                    <option value="Miercoles">Miércoles</option>
-                    <option value="Jueves">Jueves</option>
-                    <option value="Viernes">Viernes</option>
-                    <option value="Sabado">Sábado</option>
-                    <option value="Domingo">Domingo</option>
-                </select>
-
-                <select
-                 onChange={(event) => setMes(event.target.value)} value={mes}
-                >
-                    <option value=""><em>Seleccionar Mes  </em></option>
-                    <option value="Enero">Enero</option>
-                    <option value="Febrero">Febrero</option>
-                    <option value="Marzo">Marzo</option>
-                    <option value="Abril">Abril</option>
-                    <option value="Mayo">Mayo</option>
-                    <option value="Junio">Junio</option>
-                    <option value="Julio">Julio</option>
-                    <option value="Agosto">Agosto</option>
-                    <option value="Septiembre">Septiembre</option>
-                    <option value="Octubre">Octubre</option>
-                    <option value="Noviembre">Noviembre</option>
-                    <option value="Diciembre">Diciembre</option>
-                </select>
+                <input type="date" placeholder="Ingresar Fecha"  value={date} onChange={(e) => setDate(e.target.value)}/>
 
                 <input 
                     type="text" 
@@ -296,7 +277,7 @@ export function Task() {
             <div className="task-table">
                 <div className="table-responsive">
                     <table>
-                    <button onClick={deleteAllTasks} className="delete-all">Borrar Todo</button>
+                    <button onClick={deleteAll} className="delete-all">Borrar Todo</button>
                         <tbody>
                             <Button
                                 onClick={() => setShowInputs(!showInputs)}
@@ -312,17 +293,18 @@ export function Task() {
                                     onClick={() => setActiveRow(activeRow === element._id ? null : element._id)} // Toggle la fila activa
                                     className={`row ${activeRow === element._id ? 'active' : ''}`}
                                 >
-                             <td className={`tareas-completas ${element.completed ? "completado" : "incompleto"}`}>
-                           
-                             {(activeRow === element._id || selectedTasks.includes(element._id)) && ( 
-                                // Mostrar el checkbox si la fila está activa o si la tarea ya está seleccionada
-                                <input
-                                    className="check"
-                                    type="checkbox"
-                                    checked={selectedTasks.includes(element._id)}
-                                    onChange={() => handleCheckboxChange(element._id)}
-                                />
-                            )}
+
+                                    <td className={`tareas-completas ${element.completed ? "completado" : "incompleto"}`}>
+                                
+                                    {(activeRow === element._id || selectedTasks.includes(element._id)) && ( 
+                                        // Mostrar el checkbox si la fila está activa o si la tarea ya está seleccionada
+                                        <input
+                                            className="check"
+                                            type="checkbox"
+                                            checked={selectedTasks.includes(element._id)}
+                                            onChange={() => handleCheckboxChange(element._id)}
+                                        />
+                                    )}
 
 
                                 <button
@@ -333,17 +315,13 @@ export function Task() {
                                 </button>
 
                                 
-                            </td>
+                                    </td>
                                         
-                                        <td>{editId === element._id ? ( <input value={editingId.day} onChange={(e) => setEditingId({...editingId, day:e.target.value})}/> ) : (element.day)}</td>
-                                        <td>{editId === element._id ? ( <input value={editingId.month} onChange={(e) => setEditingId({...editingId, month:e.target.value})}/>) : (element.month)}</td>
+                                        <td>{editId === element._id ? ( <input value={editingId.date} onChange={(e) => setEditingId({...editingId, date:e.target.value})}/> ) : (element.date)}</td>
                                         <td>{editId === element._id ? ( <input value={editingId.description} onChange={(e) => setEditingId({...editingId, description:e.target.value})}/>) : (element.description)}</td>
                                         
                                         <td className="bot">
-                                            <button className="delete-task" onClick={() => deleteTarea(element._id)}>
-                                                <FontAwesomeIcon icon={faTrash} />
-                                            </button>
-
+                                  
                                             {
                                                 editId === element._id ? (
                                                     <div className="edits-tareas">
@@ -356,10 +334,14 @@ export function Task() {
                                                         
                                                     </div>
                                                 ) : (
-                                                    <button className="gear" onClick={() => editing(element)}>
-                                                        <FontAwesomeIcon icon={faPenToSquare} />
-                                                    </button>
-                                                    
+                                                    <>
+                                                        <button className="delete-task" onClick={() => deleteTarea(element._id)}>
+                                                            <FontAwesomeIcon icon={faTrash} />
+                                                        </button>
+                                                        <button className="gear" onClick={() => editing(element)}>
+                                                            <FontAwesomeIcon icon={faPenToSquare} />
+                                                        </button>
+                                                    </>
                                                 )}
                                         </td>
 
@@ -372,6 +354,7 @@ export function Task() {
             </div>
             <ScrollTop/>
             <Toaster/>
+            <Modal show={showModal} onClose={() => setShowModal(false)} onConfirm={deleteAllTasks}/>
         </div>
     );
 }

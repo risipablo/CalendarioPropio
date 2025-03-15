@@ -10,13 +10,13 @@ exports.getTask = async (req, res) => {
 };
 
 exports.addTask = async (req, res) => {
-    const { day, description, month } = req.body;
+    const { date, description } = req.body;
 
-    if (!day || !description || !month) 
+    if (!date || !description ) 
         return res.status(400).json({ error: 'Se requieren todos los campos' });
 
     try {
-        const newTask = new taskModel({ day, description, month });
+        const newTask = new taskModel({ date, description });
         const result = await newTask.save();
         res.status(201).json(result);
     } catch (err) {
@@ -46,14 +46,14 @@ exports.completedTask = async (req,res) => {
 
 exports.saveTask = async (req,res) => {
     const {id} = req.params;
-    const {day,month,description} = req.body;
+    const {date,description} = req.body;
 
-    if (!day || !month || !description) {
+    if (!date || !description) {
         return res.status(400).json({error:"completed the sections"})
     }
 
     try{
-        const saveAccions = await taskModel.findByIdAndUpdate(id, { day , month , description }, { new:true })
+        const saveAccions = await taskModel.findByIdAndUpdate(id, { date, description }, { new:true })
         if (!saveAccions){
             return res.status(404).json({error: "Tarea no encontrada"})
         }

@@ -1,6 +1,6 @@
 .task-container {
     padding: 1.2rem;
-    max-width: 800px;
+    max-width: 840px;
     margin: 3rem auto;
     background: #f8f9fa;
     border-radius: 8px;
@@ -17,13 +17,14 @@ h2 {
 .task-input {
     display: flex;
     flex-direction: row;
-    gap: 10px;
+    gap: 25px;
     align-items: center;
 }
 
 .task-input select, .task-input input {
-    padding: 10px;
-    width: 100%;
+    margin: 0 auto; 
+    padding: 12px 22px;
+    width: 40%;
     border-radius: 12px;
     outline: none;
     border: 1px solid #d1d5db;
@@ -120,10 +121,7 @@ h2 {
 }
 
 
-.table-responsive {
-    width: 100%;
-    overflow-x: auto;
-}
+/*  */
 
 .tareas-completas{
     display: flex;
@@ -151,15 +149,28 @@ h2 {
 .tareas-completas button:hover {
     color: #28a745; 
 }
-.task-table table {
+.task-table, .task-table table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 2rem;
 }
 
-.task-table th, .task-table td {
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    display: flex;
+    margin: 0 auto;
+    justify-content: center;
+}
+
+
+
+ .task-table td {
+    min-width: 120px;
     text-align: center;
+    vertical-align: middle;
     padding: 1.2rem;
+    /* margin: 0 3rem; */
     justify-content: center;
     border-bottom: 1px solid #fffefe;
     white-space: nowrap;
@@ -264,3 +275,4 @@ h2 {
 .down{
     color:#961926
 }
+

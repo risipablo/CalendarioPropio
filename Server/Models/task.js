@@ -1,11 +1,7 @@
 const mongoose = require("mongoose");
 
 const taskSchema = new mongoose.Schema({
-    day: { 
-        type: String, 
-        required: true
-    },
-    month:{
+    date: { 
         type: String, 
         required: true
     },

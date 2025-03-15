@@ -13,9 +13,11 @@
 }
 
 .nota-input {
-    display: flex;
+    display: block;
     justify-content: space-between;
+    justify-content: center;
     align-items: center;
+    flex-direction: column;
     margin: 1.4rem auto;
 }
 
@@ -41,7 +43,6 @@
 
 .nota-input .agregar {
     background-color: #ffffff;
-
     color: #228a57;
     letter-spacing: 1px;
 }
@@ -52,7 +53,6 @@
 }
 
 .nota-input .mic{
-    
     background-color: #ffffff;
     color: #22a465;
 }
@@ -61,8 +61,6 @@
     transition: .3s;
     transform: scale(1.08);
 }
-
-
 
 .notas {
     overflow-x: auto;
@@ -76,8 +74,6 @@
 
 .notas th, .notas td {
     padding: 15px;
-    /* border: 1px solid #ddd; */
-   
 }
 
 .notas th {
@@ -89,9 +85,7 @@
 .notas td {
     color: #0f0f0f;
     text-align: center;
-    /* font-weight: 600; */
     font-size: 1rem;
-    
 }
 
 .descripcion, .notas-td{
@@ -99,17 +93,13 @@
     flex-wrap: wrap;
 }
 
-
-
 .notas-buttons {
     display: flex;
     justify-content: center;
-
 }
 
 .notas-buttons button {
     margin: 0 8px;
- 
     padding: 8px 12px;
     font-size: .8rem;
     cursor: pointer;
@@ -171,11 +161,11 @@
 
 .btn-edit {
     display: flex;
-    gap: 8px; /* Espacio entre los botones */
-  }
-  
-  .check {
-    background-color: #4CAF50; /* Verde para check */
+    gap: 8px; 
+}
+
+.check {
+    background-color: #4CAF50; 
     color: white;
     border: none;
     padding: 10px 15px;
@@ -183,14 +173,14 @@
     cursor: pointer;
     border-radius: 5px;
     transition: background-color 0.3s ease;
-  }
-  
-  .check:hover {
-    background-color: #45a049; /* Color al pasar el cursor */
-  }
-  
-  .cancel {
-    background-color: #f44336; /* Rojo para cancel */
+}
+
+.check:hover {
+    background-color: #45a049; 
+}
+
+.cancel {
+    background-color: #f44336; 
     color: white;
     border: none;
     padding: 10px 15px;
@@ -198,12 +188,11 @@
     cursor: pointer;
     border-radius: 5px;
     transition: background-color 0.3s ease;
-  }
-  
-  .cancel:hover {
-    background-color: #e53935; /* Color al pasar el cursor */
-  }
-  
+}
+
+.cancel:hover {
+    background-color: #e53935; 
+}
 
 @media (max-width: 600px) {
     .nota-input {
@@ -214,6 +203,7 @@
     .nota-input input {
         margin: 0 0 10px 0;
         width: 90%;
+        flex-grow: 1; 
     }
 
     .nota-input button {
@@ -228,8 +218,12 @@
         margin: 12px 0;
         font-size: .8rem;
     }
-      
+
     .move {
         padding: 0;
+    }
+
+    .btn-edit {
+        gap: 16px; 
     }
 }

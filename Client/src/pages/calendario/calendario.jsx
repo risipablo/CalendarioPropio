@@ -21,9 +21,11 @@ const Calender = () => {
     const fetchNotes = async () => {
         try {
             const formattedDate = formatDate(date);
+            console.log(`Fetching notes for date: ${formattedDate}`);
             const response = await axios.get(
                 `${serverFront}/api/notes/${formattedDate}`
             );
+            console.log("Fetched notes:", response.data);
             setNotes(response.data);
         } catch (err) {
             console.error("Error obteniendo notas:", err);
@@ -32,27 +34,28 @@ const Calender = () => {
 
     // Agregar una nota al backend
     const addNote = async () => {
-      if (!newNote.trim()) return;
-  
-      try {
-          const formattedDate = formatDate(date);
-          const response = await axios.post(`${serverFront}/api/notes`, {
-            date: formattedDate,
-            content: newNote,
-          });
-          setNotes([...notes, response.data]);
-          setNewNote("");
-      } catch (err) {
-          console.error("Error agregando nota:", err);
-      }
-  };
+        if (!newNote.trim()) return;
 
-
+        try {
+            const formattedDate = formatDate(date);
+            console.log(`Adding note for date: ${formattedDate}, content: ${newNote}`);
+            const response = await axios.post(`${serverFront}/api/notes`, {
+                date: formattedDate,
+                content: newNote,
+            });
+            console.log("Added note:", response.data);
+            setNotes([...notes, response.data]);
+            setNewNote("");
+        } catch (err) {
+            console.error("Error agregando nota:", err);
+        }
+    };
 
     // Eliminar una nota del backend
     const deleteNote = async (content) => {
         try {
             const formattedDate = formatDate(date);
+            console.log(`Deleting note for date: ${formattedDate}, content: ${content}`);
             await axios.delete(`${serverFront}/api/notes`, { 
                 data: { 
                     date: formattedDate, 
@@ -74,19 +77,19 @@ const Calender = () => {
         <div className="calendar-container">
             <h2>Calendario de Notas</h2>
             <Calendar onChange={setDate} value={date} />
-                <div className="notes-container">
-                    <h3>Notas para el {date.toLocaleDateString()}</h3>
-                    <ul>
-                        {notes.map((note, index) => (
-                            <li key={index}>
-                                {note}
-                                <button onClick={() => deleteNote(note)}>
-                                    <FaTrash />
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
-                    <div className="input">
+            <div className="notes-container">
+                <h3>Notas para el {date.toLocaleDateString()}</h3>
+                <ul>
+                    {notes.map((note, index) => (
+                        <li key={index}>
+                            {note}
+                            <button onClick={() => deleteNote(note)}>
+                                <FaTrash />
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+                <div className="input">
                     <input
                         type="text"
                         value={newNote}
@@ -95,10 +98,8 @@ const Calender = () => {
                         onKeyPress={(e) => e.key === 'Enter' && addNote()}
                     />
                     <button onClick={addNote}>Agregar</button>
-                    </div>
-
                 </div>
-
+            </div>
         </div>
     );
 };
