@@ -23,6 +23,7 @@
   padding: 10px;
   border-radius: 6px;
   transition: all 0.2s;
+  position: relative;
 }
 
 .react-calendar__tile:hover {
@@ -36,13 +37,25 @@
   font-weight: bold;
 }
 
+/* Indicador de actividad */
+.react-calendar__tile.has-note::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  background-color: red;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+}
+
 /* Notas */
 .notes-container {
   margin-top: 20px;
   background: #ffffff;
   padding: 15px;
   border-radius: 8px;
-  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.3);
 }
 
 .notes-container h3 {
@@ -62,20 +75,32 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
+  padding: 1rem 1.5rem;
   border-radius: 6px;
-  background: #f1f1f1;
-  margin: 1rem auto;
+  background: #f9f9f9;
+  margin: 0.5rem auto;
   transition: 0.2s;
+  border-left: 5px solid #007bff;
 }
 
 .notes-container li:hover {
   background: #e3e3e3;
 }
 
-
-.input{
+.notes-container button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #ff4d4d;
+  font-size: 1rem;
   display: flex;
+  align-items: center;
+}
+
+/* Input */
+.input {
+  display: flex;
+  align-items: center;
   margin: 1rem auto;
   padding: 1rem;
 }
@@ -83,30 +108,34 @@
 .notes-container input {
   width: calc(80% - 20px);
   padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.notes-container button {
-  background: ff4d4d;
   border: none;
-  cursor: pointer;
-  color: #ff4d4d;
-  font-size: 1rem;
+  border-bottom: 2px solid #ccc;
+  outline: none;
+  transition: border-color 0.3s;
 }
 
+.notes-container input:hover,
+.notes-container input:focus {
+  border-bottom: 2px solid #007bff;
+}
 
-/* Botón de agregar */
+/* Botón de agregar con icono */
 .input button {
-  margin: 0 2rem;
-  width: 30%;
-  padding: 12px;
+  margin-left: 30px;
+  /* width: 0%; */
+  padding: .7rem 2rem;
   background-color: #1ccb48;
-  color: rgb(249, 249, 249);
+  color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   transition: background 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  /* font-weight: bold; */
+  letter-spacing: 1px;
 }
 
 .input button:hover {

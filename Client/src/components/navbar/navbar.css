@@ -24,7 +24,8 @@
     backdrop-filter: blur(6px);
     transition: 0.3s;
     transform: translateX(-100%); 
-    background: #2ab270;
+    /* background: #2ab270; */
+    background: #3a89b2;
     overflow-y: auto; 
     padding-top: 1rem;
 }
@@ -88,7 +89,7 @@
 .menu-icon span {
     height: 2px;
     width: 22px;
-    background-color: #22af51;
+    background-color: #f8f8f8;
     margin: 4px 8px;
     transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
 }

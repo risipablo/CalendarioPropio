@@ -12,12 +12,11 @@
     margin: 1rem 0 2rem;
 }
 
+
 .nota-input {
-    display: block;
-    justify-content: space-between;
+    display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
     margin: 1.4rem auto;
 }
 
@@ -30,7 +29,12 @@
     border-radius: 4px;
 }
 
-.botones-mic svg{
+.botones-mic {
+    display: flex;
+    align-items: center;
+}
+
+.botones-mic svg {
     font-size: 2rem;
 }
 
@@ -89,7 +93,7 @@
 }
 
 .descripcion, .notas-td{
-    max-width: 600px;
+    max-width: 800px;
     flex-wrap: wrap;
 }
 

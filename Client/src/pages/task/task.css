@@ -85,40 +85,6 @@ h2 {
     transform: scale(1.08);
 }
 
-@media (max-width: 768px) {
-    .task-container {
-        max-width: 400px;
-        margin: 2rem auto;
-    }
-
-    .task-input {
-        flex-direction: column;
-        gap: 5px;
-    }
-
-    .acciones {
-        display: flex;
-        margin: 3rem 0;
-        gap: 3rem;
-    }
-
-    .clean-task, .add-task{
-        margin-left: 0rem;
-    }
-
-    .task-input select {
-        width: 100%;
-        margin: .7rem auto;
-    }
-
-    .task-input input{
-        width: 90%;
-    }
-
-    .task-table table, .task-table th, .task-table td {
-        font-size: 14px;
-    }
-}
 
 
 /*  */
@@ -158,7 +124,7 @@ h2 {
 .table-responsive {
     width: 100%;
     overflow-x: auto;
-    display: flex;
+    /* display: flex; */
     margin: 0 auto;
     justify-content: center;
 }
@@ -166,11 +132,10 @@ h2 {
 
 
  .task-table td {
-    min-width: 120px;
+    min-width: 100px;
     text-align: center;
     vertical-align: middle;
     padding: 1.2rem;
-    /* margin: 0 3rem; */
     justify-content: center;
     border-bottom: 1px solid #fffefe;
     white-space: nowrap;
@@ -276,3 +241,43 @@ h2 {
     color:#961926
 }
 
+@media (max-width: 768px) {
+    .task-container {
+        max-width: auto;
+        margin: 2rem auto;
+    }
+
+    .task-input {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .acciones {
+        display: flex;
+        margin: 3rem 0;
+        gap: 3rem;
+    }
+
+    .clean-task, .add-task{
+        margin-left: 0rem;
+    }
+
+    .task-input select {
+        width: 100%;
+        margin: .7rem auto;
+    }
+
+    .task-input input{
+        width: 90%;
+    }
+
+    .task-table table, .task-table th, .task-table td {
+        font-size: 14px;
+    }
+
+    
+    .task-table td {
+        min-width: none;
+    }
+
+}
