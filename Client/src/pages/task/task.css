@@ -4,8 +4,9 @@
     margin: 3rem auto;
     background: #f8f9fa;
     border-radius: 8px;
-    border: 2px solid rgb(163, 215, 164);
-    box-shadow: 0px 8px 6px rgba(82, 151, 83, 0.9);
+    border: 2px solid rgb(58, 137, 178,);
+    box-shadow: 0px 8px 6px rgb(58, 137, 178,.9);
+    /* background: #3a89b2; */
 }
 
 h2 {
