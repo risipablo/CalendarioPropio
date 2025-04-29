@@ -1,168 +1,102 @@
+/* Contenedor principal */
 .task-container {
     padding: 1.2rem;
-    max-width: 840px;
-    margin: 3rem auto;
-    background: #f8f9fa;
+    max-width: 900px;
+    margin: 5rem auto;
+    background: #fff;
     border-radius: 8px;
-    border: 2px solid rgb(58, 137, 178,);
-    box-shadow: 0px 8px 6px rgb(58, 137, 178,.9);
-    /* background: #3a89b2; */
+    box-shadow: 0px 8px 6px 6px rgb(159, 10, 228,0.3);
 }
 
-h2 {
-    color: #333;
+/* Título */
+.task-container h2 {
     text-align: center;
+    color: #333;
     margin: 1rem 0 2rem;
+    
 }
+
 
 .task-input {
     display: flex;
-    flex-direction: row;
-    gap: 25px;
+    justify-content: space-between;
     align-items: center;
+    margin: 1.4rem auto;
 }
 
-.task-input select, .task-input input {
-    margin: 0 auto; 
-    padding: 12px 22px;
-    width: 40%;
-    border-radius: 12px;
-    outline: none;
-    border: 1px solid #d1d5db;
+.task-input input {
+    flex: 1;
+    padding: 12px;
+    font-size: 1rem;
+    margin-right: 18px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    
 }
 
-.acciones {
-    display: flex;
-    gap: 12px;
-    margin: 3rem auto 1rem;
-    justify-content: center;
+.task-input input:focus {
+    outline: none; 
+    border: 2px solid #3e75da; 
+    box-shadow: 0 0 5px rgba(63, 122, 210, 0.5); 
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; 
 }
 
-.add-task {
-    background: #28a745;
-    color: #fff;
-    padding: 10px 15px;
+.mic {
+    background-color: #ffffff;
+    color: #22a465;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    margin-left: 3rem;
-    gap: 5px;
-    transition: background 0.3s ease;
 }
-
-.add-task:hover {
-    background: #218838;
-}
-
-.clean-task {
-    background: #8e28a7;
-    color: #fff;
-    padding: 10px 15px;
-    margin-left: 3rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    gap: 5px;
-    transition: background 0.3s ease;
-}
-
-.clean-task:hover {
-    background: #742488;
-}
-
 .mic svg{
     font-size: 2rem;
 }
 
-.mic{
-    background-color: transparent;
-    color: #228a57;
-    cursor: pointer;
-    border: none;
-}
-
-.mic:hover{
+.mic:hover {
     transition: .3s;
     transform: scale(1.08);
 }
 
-
-
-/*  */
-
-.tareas-completas{
+/* Botones de agregar y limpiar */
+.acciones {
     display: flex;
-    justify-content: space-between;
-}
-
-.tareas-completas .completado {
-    text-decoration: line-through;
-    color: #a0aec0;
-}
-
-
-.tareas-completas button {
-    display: flex;
+    justify-content: center;
     align-items: center;
-    background: transparent;
+    margin: 3rem auto;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.agregar {
+    background: #28a745;
+    color: #fff;
+    padding: 8px 10px;
     border: none;
+    border-radius: 4px;
     cursor: pointer;
-    font-size: 16px;
-    color: #121212;
-    transition: color 0.3s ease;
-    margin-left: 1rem;
+    transition: background 0.3s ease;
 }
 
-.tareas-completas button:hover {
-    color: #28a745; 
-}
-.task-table, .task-table table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 2rem;
+.agregar:hover {
+    background: #218838;
 }
 
-.table-responsive {
-    width: 100%;
-    overflow-x: auto;
-    /* display: flex; */
-    margin: 0 auto;
-    justify-content: center;
-}
-
-
-
- .task-table td {
-    min-width: 100px;
-    text-align: center;
-    vertical-align: middle;
-    padding: 1.2rem;
-    justify-content: center;
-    border-bottom: 1px solid #fffefe;
-    white-space: nowrap;
-}
-
-.task-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-.task-table tr:hover {
-    background-color: #e6f7e8;
-}
-
-.delete-all{
-    background-color: #db1e31;
-    padding: 10px 15px;
+.limpiar {
+    background: #266897;
+    color: #fff;
+    padding: 8px 10px;
+    margin-left: .8rem;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     gap: 5px;
-    color: white;
+    transition: background 0.3s ease;
 }
 
-.delete-all:hover{
-    background-color: #b11525;
+.limpiar:hover {
+    background: #245e88;
 }
+
 
 .container-manyproducts{
     position: fixed;
@@ -204,48 +138,170 @@ h2 {
 }
 
 
-
-.delete-task {
-    background: transparent;
+/* Botón de eliminar todo */
+.eliminar-todo {
+    background-color: #f70202;
+    color: #fff;
+    margin: 2rem 0;
+    padding: 12px 8px;
     border: none;
+    border-radius: 4px;
     cursor: pointer;
-    font-size: 18px;
-    color: #dc3545;
+    margin-right: auto;
 }
 
-.delete-task:hover, .gear:hover, .edits-tareas button:hover  {
-    opacity: 0.7;
+.eliminar-todo:hover {
+    transition: .5s;
+    background-color: #c10505;
+    transform: scale(1.05);
 }
 
 
-.gear, .edits-tareas button{
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
+.completed-note {
+    text-decoration: line-through;
+    color: rgb(156, 159, 155); 
 }
 
-.gear{
-    margin-left: 12px;
+.completed{
+    background-color: transparent;
+    transition: ease-in-out .3s;
 }
 
-.edits-tareas{
+.completed:hover{
+    background-color: #eef0ee;
+}
+
+/* Edicion de inputs */
+.tareas-tablas input[type="text"], .tareas-tablas input[type="date"] {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+ 
+  .tareas-tablas {   
+    max-width: 100%;
+    overflow-x: auto;
+    display: block;
     justify-content: center;
-    padding: 1rem;
 }
 
-.up {
-   color: #0ac70a;
+.collapse{
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    overflow-x: auto;
+    margin: 1rem 0;
 }
 
-.down{
-    color:#961926
+.tareas-tablas tbody {
+    width: 100%; 
+    min-width: 600px;
+    padding: 2rem;
+    border-collapse: collapse;
+    margin-top: 2rem;
+    border-collapse: separate;
+    border-spacing: 0 18px;
 }
 
+.tareas-tablas tr {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    transition: background-color 0.3s ease;
+}
+
+.tareas-tablas tr:hover {
+    background-color: #e6f7e8;
+}
+
+.tareas-tablas td {
+    min-width: 100px;
+    flex-wrap: wrap;
+    text-align: center;
+    vertical-align: middle;
+    padding: 1.2rem;
+    justify-content: center;
+    border-bottom: 1px solid #fffefe;
+    /* white-space: nowrap; */
+}
+
+.tareas-completas {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.tareas-completas button {
+    font-size: 18px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #121212;
+    transition: color 0.3s ease;
+}
+
+.tareas-completas button:hover {
+    color: #28a745;
+}
+
+.tareas-completas .completado {
+    text-decoration: line-through;
+    color: #a0aec0;
+}
+
+
+.tareas-tablas button {
+    margin: 0 9px;
+    padding: 6px 10px;
+    /* background-color: transparent; */
+    border: none;
+    cursor: pointer;
+}
+
+
+.acciones-botones {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; 
+}
+
+.btn-edit {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+
+.edit-row td {
+    text-align: center;
+    padding: 1.5rem 1rem;
+    background-color: #f3f4f6;
+    border-radius: 8px;
+}
+
+.edit-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    align-items: center;
+}
+
+.edit-inputs input {
+    width: 80%;
+    max-width: 500px;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+/* Responsividad general */
 @media (max-width: 768px) {
     .task-container {
         max-width: auto;
-        margin: 2rem auto;
+        margin: 5rem auto;
     }
 
     .task-input {
@@ -255,12 +311,13 @@ h2 {
 
     .acciones {
         display: flex;
-        margin: 3rem 0;
-        gap: 3rem;
+        padding: 0 2rem;
+        gap: 12px;
     }
 
-    .clean-task, .add-task{
-        margin-left: 0rem;
+    .limpiar, .agregar{
+        margin: 0 auto;
+        
     }
 
     .task-input select {
@@ -272,12 +329,16 @@ h2 {
         width: 90%;
     }
 
-    .task-table table, .task-table th, .task-table td {
+    .tareas-tablas table {
+        min-width: 100%; 
+    }
+
+    .tareas-tablas table, .tareas-tablas th, .tareas-tablas td {
         font-size: 14px;
     }
 
     
-    .task-table td {
+    .tareas-tablas td {
         min-width: none;
     }
 

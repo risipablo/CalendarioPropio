@@ -1,9 +1,10 @@
 .nota {
     padding: 1.2rem;
-    max-width: 800px;
-    margin: 4rem auto;
+    max-width: 900px;
+    margin: 5rem auto;
     background: #fff;
     border-radius: 8px;
+    box-shadow: 0px 8px 6px 6px rgb(159, 10, 228,0.3);
 }
 
 .nota h2 {
@@ -29,6 +30,13 @@
     border-radius: 4px;
 }
 
+.nota-input input:focus {
+    outline: none; 
+    border: 2px solid #3e75da; 
+    box-shadow: 0 0 5px rgba(63, 122, 210, 0.5); 
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; 
+}
+
 .botones-mic {
     display: flex;
     align-items: center;
@@ -45,13 +53,13 @@
     border-radius: 4px;
 }
 
-.nota-input .agregar {
+.nota-input .add {
     background-color: #ffffff;
     color: #228a57;
     letter-spacing: 1px;
 }
 
-.agregar:hover {
+.add:hover {
     transition: .3s;
     transform: scale(1.08);
 }
@@ -66,77 +74,12 @@
     transform: scale(1.08);
 }
 
-.notas {
-    overflow-x: auto;
-}
 
-.notas table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 1.2rem 0;
-}
-
-.notas th, .notas td {
-    padding: 15px;
-}
-
-.notas th {
-    background-color: #22a465;
-    color: #fff;
-    text-align: center;
-}
-
-.notas td {
-    color: #0f0f0f;
-    text-align: center;
-    font-size: 1rem;
-}
-
-.descripcion, .notas-td{
-    max-width: 800px;
-    flex-wrap: wrap;
-}
-
-.notas-buttons {
+/* .notas-checkbox{
     display: flex;
-    justify-content: center;
-}
+    margin: 1.4rem auto;
+} */
 
-.notas-buttons button {
-    margin: 0 8px;
-    padding: 8px 12px;
-    font-size: .8rem;
-    cursor: pointer;
-    border: none;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-}
-
-.notas-buttons button i {
-    align-items: center;
-    margin:  0 auto;
-}
-
-.completar {
-    background-color: #0ac70a;
-    color: #fff;
-}
-
-.completar:hover {
-    background-color: #027a02;
-    transform: scale(1.05);
-}
-
-.desmarcar {
-    background-color: #cf0606;
-    color: #fff;
-}
-
-.desmarcar:hover {
-    background-color: #c10505;
-    transform: scale(1.05);
-}
 
 .eliminar {
     background-color: #f70202;
@@ -144,7 +87,7 @@
 }
 
 .eliminar:hover {
-    background-color: #383535;
+    background-color: #892828;
     transform: scale(1.05);
 }
 
@@ -163,10 +106,36 @@
     color: rgb(150, 146, 146);
 }
 
-.btn-edit {
+
+.checkbox-container {
     display: flex;
-    gap: 8px; 
+    margin: 1.8rem auto;
+    align-items: center;
+    justify-content: center;
 }
+
+
+.completar {
+    background-color: #0ac70a;
+    color: #fff;
+}
+
+.completar:hover {
+    background-color: #027a02;
+    transform: scale(1.05);
+}
+
+.desmarcar {
+    background-color: #1063bc;
+    color: #fff;
+}
+
+.desmarcar:hover {
+    background-color: #055da4;
+    transform: scale(1.05);
+}
+
+
 
 .check {
     background-color: #4CAF50; 
@@ -198,7 +167,14 @@
     background-color: #e53935; 
 }
 
+
 @media (max-width: 600px) {
+
+    .nota{
+        max-width: auto;
+        margin: 5rem auto;
+    }
+
     .nota-input {
         flex-direction: column;
         align-items: stretch;
@@ -212,22 +188,5 @@
 
     .nota-input button {
         margin: 10px 0;
-    }
-
-    .notas th, .notas td {
-        padding: 8px;
-    }
-
-    .notas-buttons button {
-        margin: 12px 0;
-        font-size: .8rem;
-    }
-
-    .move {
-        padding: 0;
-    }
-
-    .btn-edit {
-        gap: 16px; 
     }
 }

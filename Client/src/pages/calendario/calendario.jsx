@@ -9,8 +9,8 @@ import { IconButton, TextField, Box, Dialog, DialogActions, DialogContent, Dialo
 import "./calendario.css";
 
 
-// const serverFront = "http://localhost:3001";
-const serverFront = 'https://calendariopropio.onrender.com';
+const serverFront = "http://localhost:3001";
+// const serverFront = 'https://calendariopropio.onrender.com';
 
 const Calender = () => {
     const [date, setDate] = useState(new Date());

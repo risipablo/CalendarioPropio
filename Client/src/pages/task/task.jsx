@@ -6,15 +6,15 @@ import { faTrash,faPenToSquare,faThumbsUp,faThumbsDown,faBroom } from "@fortawes
 import toast, { Toaster } from 'react-hot-toast';
 import "./task.css";  
 import { Button, Collapse } from "@mui/material";
-import { ExpandLess, ExpandMore,Mic } from "@mui/icons-material";
+import { AddCircle, CleanHands, ExpandLess, ExpandMore,Mic } from "@mui/icons-material";
 import { ScrollTop } from "../../components/common/scrollTop";
 import useSound from 'use-sound';
 import rayo from "../../assets/check.mp3"
 import ok from "../../assets/digital.mp3"
 import { Modal } from "../../components/common/modal/modal";
+import { config } from "../../components/config/variables"
 
-// const serverFront = "http://localhost:3001";
-const serverFront = 'https://calendariopropio.onrender.com';
+const serverFront = config.apiUrl; 
 
 
 export function Task() {
@@ -75,7 +75,7 @@ export function Task() {
     
 
     const [selectedTasks, setSelectedTasks] = useState([]);
-
+    
         // Manejar la selección de tareas
     const handleCheckboxChange = (id) => {
         setSelectedTasks((prev) => 
@@ -107,11 +107,14 @@ export function Task() {
     const deleteAll = () => {
         setShowModal(true)
     }
+
+
     // Eliminar todas las tareas
     const deleteAllTasks = () => {
         axios.delete(`${serverFront}/api/delete-task`)
             .then(response => {
                 setTarea([]); 
+                setShowModal(false)
                 toast.error('Todas las tareas eliminadas', {
                     position: 'top-center',
                 });
@@ -241,22 +244,20 @@ export function Task() {
                     value={descripcion}
                     onChange={(e) => setDescripcion(e.target.value)}
                 />
-             
+            
 
             </div>
 
             <div className="acciones">
-
-                <button className='mic' onClick={iniciarReconocimiento}>
-                        <Mic/>
-                    </button>
-                    
-                    <button className="add-task" onClick={addTarea}>
-                        Agregar
+            <button className='mic' onClick={iniciarReconocimiento}>
+                    <Mic/>
+                </button>
+                    <button className="agregar" onClick={addTarea}>
+                        <AddCircle/>
                     </button>
 
-                    <button className="clean-task" onClick={cleanTask}>
-                        Limpiar
+                    <button className="limpiar" onClick={cleanTask}>
+                        <CleanHands/>
                     </button>
 
             </div>
@@ -274,84 +275,106 @@ export function Task() {
                         )}
             </div>
 
-            <div className="task-table">
-                <div className="table-responsive">
-                    <table>
-                    <button onClick={deleteAll} className="delete-all">Borrar Todo</button>
-                        <tbody>
-                            <Button
-                                onClick={() => setShowInputs(!showInputs)}
-                                startIcon={showInputs ? <ExpandLess /> : <ExpandMore />}
-                                sx={{ margin: '2rem 0 0.2rem auto' }}> 
-                                    {showInputs ? 'Cerrar Tareas' : 'Abrir Tareas'}
-                            </Button>
+            <button className="eliminar-todo" onClick={deleteAll}> 
+                    Borrar Todo
+            </button>
 
-                            <Collapse  in={showInputs} timeout="auto" unmountOnExit>
-                                {tarea.map((element, index) => (
-                                    <tr 
-                                    key={index} 
-                                    onClick={() => setActiveRow(activeRow === element._id ? null : element._id)} // Toggle la fila activa
-                                    className={`row ${activeRow === element._id ? 'active' : ''}`}
-                                >
+            <tbody className="tareas-tablas">
+                <Button
+                 
+                    onClick={() => setShowInputs(!showInputs)}
+                    startIcon={showInputs ? <ExpandLess /> : <ExpandMore />}
+                    sx={{ margin: '2rem 0 0.2rem auto' }}
+                >
+                    {showInputs ? 'Cerrar Tareas' : 'Abrir Tareas'}
+                </Button>
 
-                                    <td className={`tareas-completas ${element.completed ? "completado" : "incompleto"}`}>
+                <Collapse in={showInputs} timeout="auto" className="collapse" unmountOnExit>
+                    {tarea.map((element, index) => (
+                        <React.Fragment key={index}> 
+                            <tr 
+                                className={element.completed ? "completed" : ""}
+                                onClick={() => setActiveRow(activeRow === element._id ? null : element._id)}
                                 
-                                    {(activeRow === element._id || selectedTasks.includes(element._id)) && ( 
-                                        // Mostrar el checkbox si la fila está activa o si la tarea ya está seleccionada
+                            >
+                                
+                                <td > 
+                                    {(activeRow === element._id || selectedTasks.includes(element._id)) && (
+                                        
                                         <input
-                                            className="check"
+                                            
                                             type="checkbox"
                                             checked={selectedTasks.includes(element._id)}
                                             onChange={() => handleCheckboxChange(element._id)}
                                         />
                                     )}
+                                    <button
+                                        className="completed"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            tasksCompleted(element._id, element.completed);
+                                        }}
+                                    >
+                                        <i className={element.completed ? "fas fa-check" : "fa-regular fa-circle"}></i>
+                                    </button>
+                                </td>
 
-
-                                <button
-                                    className={element.completed ? "incompleto" : "completado"}
-                                    onClick={() => tasksCompleted(element._id, element.completed)}
-                                >
-                                    <i className={element.completed ? "fas fa-check" : "fa-regular fa-circle"}></i>
-                                </button>
+                               
+                                <td>{element.date}</td>
 
                                 
-                                    </td>
-                                        
-                                        <td>{editId === element._id ? ( <input value={editingId.date} onChange={(e) => setEditingId({...editingId, date:e.target.value})}/> ) : (element.date)}</td>
-                                        <td>{editId === element._id ? ( <input value={editingId.description} onChange={(e) => setEditingId({...editingId, description:e.target.value})}/>) : (element.description)}</td>
-                                        
-                                        <td className="bot">
-                                  
-                                            {
-                                                editId === element._id ? (
-                                                    <div className="edits-tareas">
-                                                        <button className="up" onClick={() => saveTasks(element._id)}>
-                                                            <FontAwesomeIcon icon={faThumbsUp}/>
-                                                        </button>
-                                                        <button className="down" onClick={cancelEdit}>
-                                                            <FontAwesomeIcon icon={faThumbsDown}/>
-                                                        </button>
-                                                        
-                                                    </div>
-                                                ) : (
-                                                    <>
-                                                        <button className="delete-task" onClick={() => deleteTarea(element._id)}>
-                                                            <FontAwesomeIcon icon={faTrash} />
-                                                        </button>
-                                                        <button className="gear" onClick={() => editing(element)}>
-                                                            <FontAwesomeIcon icon={faPenToSquare} />
-                                                        </button>
-                                                    </>
-                                                )}
-                                        </td>
+                                <td>{element.description}</td>
 
-                                    </tr>
-                                ))}
-                            </Collapse>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                              
+                                <td>
+                                    {editId === element._id ? (
+                                        <div className="btn-edit">
+                                            <button className="check" onClick={(e) => { e.stopPropagation(); saveTasks(element._id); }}>
+                                                <FontAwesomeIcon icon={faThumbsUp} />
+                                            </button>
+                                            <button className="cancel" onClick={(e) => { e.stopPropagation(); cancelEdit(); }}>
+                                                <FontAwesomeIcon icon={faThumbsDown} />
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <button className="editar" onClick={(e) => { e.stopPropagation(); editing(element); }}>
+                                                <FontAwesomeIcon icon={faPenToSquare} />
+                                            </button>
+                                            <button className="eliminar" onClick={(e) => { e.stopPropagation(); deleteTarea(element._id); }}>
+                                                <FontAwesomeIcon icon={faTrash} />
+                                            </button>
+                                        </>
+                                    )}
+                                </td>
+                            </tr>
+
+                            
+                            {editId === element._id && (
+                                <tr className="edit-row">
+                                    <td colSpan={4}>
+                                        <div className="edit-inputs">
+                                            <input
+                                                type="date"
+                                                value={editingId.date}
+                                                onChange={(e) => setEditingId({ ...editingId, date: e.target.value })}
+                                            />
+                                            <input
+                                                type="text"
+                                                placeholder="Descripción"
+                                                value={editingId.description}
+                                                onChange={(e) => setEditingId({ ...editingId, description: e.target.value })}
+                                            />
+                                        </div>
+                                    </td>
+                                </tr>
+                            )}
+                        </React.Fragment>
+                    ))}
+                </Collapse>
+            </tbody>
+
+
             <ScrollTop/>
             <Toaster/>
             <Modal show={showModal} onClose={() => setShowModal(false)} onConfirm={deleteAllTasks}/>

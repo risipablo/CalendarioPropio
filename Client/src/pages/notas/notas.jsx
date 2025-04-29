@@ -1,17 +1,22 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./notas.css";
 import axios from 'axios'
 import { ScrollTop } from "../../components/common/scrollTop";
 import { Button, Collapse } from '@mui/material';
 import { ExpandLess, ExpandMore,AddCircle,Mic} from '@mui/icons-material';
+import { faTrash,faPenToSquare,faThumbsUp,faThumbsDown, faBroom } from "@fortawesome/free-solid-svg-icons";
 import toast, { Toaster } from 'react-hot-toast';
 import useSound from 'use-sound';
 import check from "../../assets/check.mp3"
 import ok from "../../assets/digital.mp3"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Modal } from "../../components/common/modal/modal";
+import {config} from "../../components/config/variables"
+
+const serverFront = config.apiUrl;  
 
 
-// const serverFront = "http://localhost:3001";
-const serverFront = 'https://calendariopropio.onrender.com';
+
 
 export function Notas() {
     const [tasks, setTasks] = useState([]);
@@ -125,6 +130,50 @@ export function Notas() {
         }
     };
 
+    const [showModal,setShowModal] = useState(false)
+    const [activeRow, setActiveRow] = useState(null);
+
+    const modalDelete = () => {
+        setShowModal(true)
+    }
+
+    // Eliminar todos
+    const deleteAll = () => {
+        axios.delete(`${serverFront}/api/tareas`)
+            .then(response => {
+                setTasks([]);
+                setShowModal(false)
+                toast.success('Todas las tareas eliminadas', {
+                    position: 'top-center',
+                });
+            })
+            .catch(err => console.log(err));
+    }
+
+    const [selectedNotes, setSelectedNotes] = useState([]);
+
+    const handleCheck = (id) => {
+        setSelectedNotes((prev) => 
+        prev.includes(id) ? prev.filter((noteId) => noteId !== id) : [...prev, id]
+        );
+    }
+
+    const deleteMany = (ids) => {
+        axios.delete(`${serverFront}/api/many-tareas`, { data: { ids } })
+            .then(response => {
+                setTasks(tasks => tasks.filter((task) => !ids.includes(task._id)));
+                setSelectedNotes([]);
+                toast.success('Tareas eliminadas', {
+                    position: 'top-center',
+                });
+            })
+            .catch(err => console.log(err));
+    }
+
+    const cleanMany = () => {
+        setSelectedNotes("");
+    }
+
     //Reconocimiento de voz
     const recognition = useRef(null);
     const [loading, setLoading] = useState(false);
@@ -186,8 +235,6 @@ export function Notas() {
                             value={newTask}
                         />
 
-                   
-
                         <input
                             type="text"
                             placeholder="Agregar descripción ...."
@@ -201,15 +248,32 @@ export function Notas() {
                             <Mic/>
                         </button>
 
-                        <button className="agregar" onClick={addTask}>
+                        <button className="add" onClick={addTask}>
                             <AddCircle/>
                         </button>
                     </div>
        
                 </div>
 
-                <div className="notas">
-                    <table>
+                <button className="eliminar-todo" onClick={modalDelete}> 
+                    Borrar Todo
+                </button>
+
+                <div className="container-manyproducts">
+                    {selectedNotes.length > 0 && (
+                        <button onClick={() => deleteMany(selectedNotes)} className="delete-many">
+                            <FontAwesomeIcon icon={faTrash}/>
+                        </button>
+                    )}
+
+                    {selectedNotes.length > 0 && (
+                        <button onClick={cleanMany} className="broom">
+                            <FontAwesomeIcon icon={faBroom}/>
+                        </button>
+                    )}
+                </div>
+
+
                         {/* <thead>
                             <tr>
                                 <th>Tarea</th>
@@ -217,7 +281,7 @@ export function Notas() {
                                 <th></th>
                             </tr>
                         </thead> */}
-                        <tbody>
+                        <tbody className="tareas-tablas">
                             <Button
                                 onClick={() => setShowInputs(!showInputs)}
                                 startIcon={showInputs ? <ExpandLess /> : <ExpandMore />}
@@ -228,64 +292,99 @@ export function Notas() {
 
                             <Collapse in={showInputs} timeout="auto" unmountOnExit>
                                 {tasks.map((element, index) => (
-                                    <tr key={index} className={element.completed ? "completed" : ""}>
+                                    <React.Fragment key={index} >
+
+
+                                    <tr  onClick={() => setActiveRow(activeRow === element._id ? null : element._id)}
+                                            className={element.completed ? 'completed' : ''}
+                                             >
+
+
+                                        <div className="checkbox-container">
+
+                                        {(activeRow === element._id || selectedNotes.includes(element._id)) && (
+                                            
+                                            <input
+                                                className="check"
+                                                type="checkbox"
+                                                checked={selectedNotes.includes(element._id)}
+                                                onChange={() => handleCheck(element._id)}
+                                            />
+                                        )}
+
+                                        </div>
+                                        
+                
+
                                         <td className="notas-td">
-                                            {editId === element._id ? (
-                                                <input
-                                                    className="descripcion"
-                                                    value={editingId.task}
-                                                    onChange={(e) => setEditingId({ ...editingId, task: e.target.value })}
-                                                />
-                                            ) : (
-                                                element.task
-                                            )}
+                                            {element.task}
                                         </td>
 
                                         <td className="descripcion">
-                                            {editId === element._id ? (
-                                                <input
-                                                    value={editingId.descripcion}
-                                                    onChange={(e) => setEditingId({ ...editingId, descripcion: e.target.value })}
-                                                />
-                                            ) : (
-                                                element.descripcion
-                                            )}
+                                            {element.descripcion}
                                         </td>
 
-                                        <td className="notas-buttons">
-                                            <button
-                                                className={element.completed ? "desmarcar" : "completar"}
-                                                onClick={() => taskCompleted(element._id, element.completed)}
-                                            >
-                                                <i className={element.completed ? "fas fa-undo" : "fas fa-check"}></i>
-                                            </button>
-                                            <button onClick={() => deleteTask(element._id)} className="eliminar">
-                                                <i className="fas fa-trash"></i>
-                                            </button>
 
-                                            {editId === element._id ? (
-                                                <div className="btn-edit">
-                                                    <button className="check" onClick={() => saveTask(element._id)}>
-                                                        <i class="fa-regular fa-thumbs-up"></i>
-                                                    </button>
-                                                    <button className="cancel" onClick={cancelEdit}>
-                                                        <i className="fa-solid fa-ban"></i>
-                                                    </button>
-                                                </div>
-                                            ) : (
-                                                <button className="editar" onClick={() => editing(element)}>
-                                                    <i className="fas fa-edit"></i>
+                                        <td className="notas-acciones">
+                                            <div className="acciones-botones">
+                                                <button
+                                                    className={element.completed ? "desmarcar" : "completar"}
+                                                    onClick={() => taskCompleted(element._id, element.completed)}
+                                                >
+                                                    <i className={element.completed ? "fas fa-undo" : "fas fa-check"}></i>
                                                 </button>
-                                            )}
+
+                                                {editId === element._id ? (
+                                                    <div className="btn-edit">
+                                                        <button className="check" onClick={(e) => { e.stopPropagation(); saveTask(element._id); }}>
+                                                            <FontAwesomeIcon icon={faThumbsUp} />
+                                                        </button>
+                                                        <button className="cancel" onClick={(e) => { e.stopPropagation(); cancelEdit(); }}>
+                                                            <FontAwesomeIcon icon={faThumbsDown} />
+                                                        </button>
+                                                    </div>
+                                                ) : (
+                                                    <>
+                                                        <button className="editar" onClick={(e) => { e.stopPropagation(); editing(element); }}>
+                                                            <FontAwesomeIcon icon={faPenToSquare} />
+                                                        </button>
+                                                        <button className="eliminar" onClick={(e) => { e.stopPropagation(); deleteTask(element._id); }}>
+                                                            <FontAwesomeIcon icon={faTrash} />
+                                                        </button>
+                                                    </>
+                                                )}
+                                            </div>
                                         </td>
+                                        
                                     </tr>
+
+                                    {editId === element._id && (
+                                            <tr className="edit-row">
+                                                <td colSpan={4}>
+                                                    <div className="edit-inputs">
+                                                        <input
+                                                            type="text"
+                                                            value={editingId.task}
+                                                            onChange={(e) => setEditingId({ ...editingId, task: e.target.value })}
+                                                        />
+                                                        <input
+                                                            type="text"
+                                                            placeholder="Descripción"
+                                                            value={editingId.descripcion}
+                                                            onChange={(e) => setEditingId({ ...editingId, newDescripcion: e.target.value })}
+                                                        />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        )}
+                                    </React.Fragment>
                                 ))}
                             </Collapse>
                         </tbody>
-                    </table>
-                  </div>
+
                 <ScrollTop/>
                 <Toaster/>
+                <Modal show={showModal} onClose={() => setShowModal(false)} onConfirm={deleteAll}/>
             </div>
         </>
     );

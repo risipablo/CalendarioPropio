@@ -84,3 +84,14 @@ exports.saveAccion = async (req, res) => {
       res.status(500).json({ error: err.message });
   }
 };
+
+
+exports.deleteAll = async (req, res) => {
+    try {
+        const result = await accionModel.deleteMany({});
+        res.json({ message: "Todas las acciones eliminadas", result });
+    } catch (err) {
+        console.error("Error al eliminar las acciones", err);
+        res.status(500).json({ error: "Server error" });
+    }
+}

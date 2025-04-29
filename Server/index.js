@@ -6,6 +6,7 @@ const errorHandle = require('./Middleware/errorHandle');
 const accionRoutes = require('./Routes/accionRoutes');
 const calenderNotes = require('./Routes/calenderRoutes')
 const taskRoutes = require('./Routes/taskRoutes')
+const userRoutes = require('./Routes/authRoutes')
 
 const path = require('path');
 
@@ -27,6 +28,7 @@ app.use(cors(corsOptions));
 app.use('/api', calenderNotes)
 app.use('/api', accionRoutes);
 app.use('/api', taskRoutes)
+app.use('/api', userRoutes)
 
 
 // Servir archivos estáticos
