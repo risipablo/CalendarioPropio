@@ -7,10 +7,10 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import axios from "axios";
 import { IconButton, TextField, Box, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import "./calendario.css";
+import {config} from "../../components/config/variables"
 
 
-const serverFront = "http://localhost:3001";
-// const serverFront = 'https://calendariopropio.onrender.com';
+const serverFront = config.apiUrl; 
 
 const Calender = () => {
     const [date, setDate] = useState(new Date());
@@ -18,6 +18,7 @@ const Calender = () => {
     const [newNote, setNewNote] = useState("");
     const [editingNote, setEditingNote] = useState(null); // Nota que se está editando
     const [editedContent, setEditedContent] = useState(""); // Contenido editado
+    const [daysWithNotes, setDaysWithNotes] = useState([]); // Días con notas
 
     const formatDate = (date) => {
         return date.toISOString().split("T")[0];
@@ -32,6 +33,19 @@ const Calender = () => {
             console.error("Error obteniendo notas:", err);
         }
     };
+
+    const fetchDaysWithNotes = async () => {
+        try {
+            const response = await axios.get(`${serverFront}/api/notes`); 
+            setDaysWithNotes(response.data);
+        } catch (err) {
+            console.error("Error obteniendo días con notas:", err);
+        }
+    };
+
+    useEffect(() => {
+        fetchDaysWithNotes();
+    }, []);
 
     const addNote = async () => {
         if (!newNote.trim()) return;
@@ -86,7 +100,15 @@ const Calender = () => {
     return (
         <div className="calendar-container">
             <h2>Calendario de Notas</h2>
-            <Calendar onChange={setDate} value={date} />
+            <Calendar onChange={setDate}
+                value={date}
+                tileClassName={({ date, view }) => {
+                if (view === 'month') {
+                    const formatted = formatDate(date); 
+                    return daysWithNotes.includes(formatted) ? 'has-note' : null;
+                }
+            }} />
+
             <div className="notes-container">
                 <h3>Notas para el {date.toLocaleDateString()}</h3>
                 <ul>

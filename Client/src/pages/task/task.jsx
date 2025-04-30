@@ -337,14 +337,14 @@ export function Task() {
                                             </button>
                                         </div>
                                     ) : (
-                                        <>
+                                        <div className="acciones">
                                             <button className="editar" onClick={(e) => { e.stopPropagation(); editing(element); }}>
                                                 <FontAwesomeIcon icon={faPenToSquare} />
                                             </button>
                                             <button className="eliminar" onClick={(e) => { e.stopPropagation(); deleteTarea(element._id); }}>
                                                 <FontAwesomeIcon icon={faTrash} />
                                             </button>
-                                        </>
+                                        </div>
                                     )}
                                 </td>
                             </tr>

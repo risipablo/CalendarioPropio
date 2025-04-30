@@ -142,6 +142,19 @@
   background-color: #22b446;
 }
 
+
+.react-calendar__tile.has-note::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  background-color: red;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+}
+
+
 /* Responsive */
 @media (max-width: 600px) {
   .calendar-container {
